@@ -15,7 +15,7 @@
     <title>
       
       
-         Notes: Lazy binding 
+         Lazy binding 
       
     </title>
     <link rel="canonical" href="https://chuang76.github.io/posts/lazy_binding/">
@@ -413,12 +413,16 @@
       <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
       <ul>
         
+          <li><a href="https://chuang76.github.io/posts/about/">About</a></li>
+        
+          <li><a href="https://github.com/chuang76">Project</a></li>
+        
       </ul>
     </section>
 
 
 <section id=content>
-  <h1> Notes: Lazy binding </h1>
+  <h1> Lazy binding </h1>
 
   
     <div id=sub-header>
@@ -447,7 +451,7 @@
 </li>
 </ol>
 <h2 id="experiment">Experiment</h2>
-<p>Let&rsquo;s start with a simple example called p1.c.</p>
+<p>The experiment is on an x86 Linux platform. Let&rsquo;s start with a simple example called p1.c.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="">#include</span> <span style="">&lt;stdio.h&gt;</span><span style="">
 </span><span style=""></span>
 <span style="">int</span> main(<span style="">int</span> argc, <span style="">char</span>** argv)
@@ -494,6 +498,7 @@ Breakpoint 1 at 0x401138: file p1.c, line 5.
 </code></pre><p>Wait, what do the values pointed by 0x404008 and 0x404010? Let&rsquo;s check it. The first one is 0x00007ffff7ffe180, which is another argument for the resolution later. The second one is 0x00007ffff7fe8510.</p>
 <pre><code>gdb-peda$ x/g 0x404008
 0x404008:       0x00007ffff7ffe180
+
 gdb-peda$ x/g 0x404010
 0x404010:       0x00007ffff7fe8510
 </code></pre><p>We can check the mapping information with vmmap command. As you can see, 0x00007ffff7fe8510 corresponds to ld-2.31.so., which means it belongs to the dynamic linker/loader.</p>
