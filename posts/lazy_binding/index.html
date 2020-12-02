@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="">
+
+    
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet" media="print" type="text/css" onload="this.media='all'">
+    
+
+    <title>
+      
+      
+         Notes: lazy binding 
+      
+    </title>
+    <link rel="canonical" href="https://chuang76.github.io/posts/lazy_binding/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+     
+    font-family: 'Verdana'; 
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify { float: left; }
+  .right-justify { float:right; }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, .date {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content .date {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right:0.5em;;
+  }
+
+  #links :nth-child(2) {
+    margin-left:0.5em;;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    *, #nav h1 a {
+      color: #FDFDFD;
+    }
+
+    body {
+      background: #121212;
+    }
+
+    pre, code {
+      background-color: #262626;
+    }
+
+    #sub-header, .date {
+      color: #BABABA;
+    }
+
+    hr {
+      background: #EBEBEB;
+    }
+  }
+</style>
+
+
+    </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Notes: lazy binding </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <h2 id="background">Background</h2>
+<p>During the investigation of the ELF format, I found out that I was not familiar enough with the lazy binding mechanism. So in this article, I&rsquo;ll try to study and cover it with my notes and experiment.</p>
+<ol>
+<li>
+<p>compile process</p>
+<p><img src="https://github.com/chuang76/Security-101/blob/master/05-linking/figure/proc.jpg?raw=true" alt=""></p>
+</li>
+<li>
+<p>dynamic linking and lazy binding</p>
+<p>Why dynamic linking? (1) share codes, if the library (e.g. libc) contains a lot of functions, it is better to adopt code sharing mechanism. (2) modern systems typically use ASLR protection, so we should avoid hardcoding addresses.</p>
+<p>What is lazy binding? Lazy binding means the symbolic references are not resolved until runtime. It ensures that the dynamic linker does not waste too much time on relocations.</p>
+</li>
+<li>
+<p>GOT and PLT sections</p>
+<p>An ELF executable includes several sections. You can check section information with readelf command. To implement the lazy binding, we need two special sections called .got (.got.plt) and .plt.</p>
+<p>Global offset table (GOT) is a table which contains absolute addresses of external symbols. GOT is represented as .got and .got.plt sections in an ELF file. A program can look up its GOT and extract the absolute value, then redirect the position-independent reference to the absolute location. The relocation entries (i.e., symbol to absolute address) in GOT are filled by the linker.</p>
+<p>Procedure linkage table (PLT) is used to look up the addresses in GOT, and it is represented as .plt section in an ELF file. However, you probably would ask that why do we need PLT? It seems to be roundabout, but actually, it is necessary under a dynamic linked situation. The reason is at <em>compile</em> time, we have no idea about the absolute addresses of symbols.  So we need PLT as a stub to make an indirect jump. In this way, the original function calls can be unmodified. At runtime, the dynamic linker (ld.so) will be responsible for updating correct addresses.</p>
+</li>
+</ol>
+<h2 id="experiment">Experiment</h2>
+<p>Let&rsquo;s start with a simple example called p1.c.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="">#include</span> <span style="">&lt;stdio.h&gt;</span><span style="">
+</span><span style=""></span>
+<span style="">int</span> main(<span style="">int</span> argc, <span style="">char</span>** argv)
+{
+    puts(<span style="font-style:italic">&#34;Hello world&#34;</span>); 
+    puts(<span style="font-style:italic">&#34;Hello world again&#34;</span>); 
+    
+    <span style="font-weight:bold">return</span> 0; 
+}
+</code></pre></div><p>Compile it into an executable file with debugging information.</p>
+<pre><code>$ gcc p1.c -no-pie -g -o p1
+</code></pre><p>To understand how GOT and PLT work, we&rsquo;ll trace the program with gdb tool. First, disassemble the main function, and set a breakpoint at puts function (i.e., the address 0x401138).</p>
+<pre><code>gdb-peda$ disas main
+Dump of assembler code for function main:
+   0x0000000000401122 &lt;+0&gt;:     push   rbp
+   0x0000000000401123 &lt;+1&gt;:     mov    rbp,rsp
+   0x0000000000401126 &lt;+4&gt;:     sub    rsp,0x10
+   0x000000000040112a &lt;+8&gt;:     mov    DWORD PTR [rbp-0x4],edi
+   0x000000000040112d &lt;+11&gt;:    mov    QWORD PTR [rbp-0x10],rsi
+   0x0000000000401131 &lt;+15&gt;:    lea    rdi,[rip+0xecc]        # 0x402004
+   0x0000000000401138 &lt;+22&gt;:    call   0x401030 &lt;puts@plt&gt;
+   0x000000000040113d &lt;+27&gt;:    lea    rdi,[rip+0xecc]        # 0x402010
+   0x0000000000401144 &lt;+34&gt;:    call   0x401030 &lt;puts@plt&gt;
+   0x0000000000401149 &lt;+39&gt;:    mov    eax,0x0
+   0x000000000040114e &lt;+44&gt;:    leave  
+   0x000000000040114f &lt;+45&gt;:    ret    
+End of assembler dump.
+gdb-peda$ b *0x401138
+Breakpoint 1 at 0x401138: file p1.c, line 5.
+</code></pre><p>Run the program and check the current program counter to ensure we&rsquo;re going to call the puts function.</p>
+<pre><code>gdb-peda$ x/i $pc
+=&gt; 0x401138 &lt;main+22&gt;:  call   0x401030 &lt;puts@plt&gt;
+</code></pre><p>Next, as you can see, we are trying to look up the GOT entry.</p>
+<pre><code>gdb-peda$ x/i $pc
+=&gt; 0x401030 &lt;puts@plt&gt;: jmp    QWORD PTR [rip+0x2fe2]        # 0x404018 &lt;puts@got.plt&gt;
+</code></pre><p>But the interesting thing is, the next instruction does nothing about GOT. Why? The reason is this is our first time to call puts function and our program adopts <em>lazy binding</em>. Hence, before resolving the reference, we can not obtain the actual address of puts function. So it goes back to .plt section. A slot number (0x0) is pushed onto the stack. It is a parameter for the resolution later.</p>
+<pre><code>gdb-peda$ x/2i $pc
+=&gt; 0x401036 &lt;puts@plt+6&gt;:       push   0x0
+   0x40103b &lt;puts@plt+11&gt;:      jmp    0x401020
+</code></pre><p>Now, it jumps to 0x401020, which is the location of a default stub in .plt section. Then, it pushes something pointed by 0x404008 onto the stack, and jumps to another location pointed by 0x404010.</p>
+<pre><code>gdb-peda$ x/2i $pc
+=&gt; 0x401020:    push   QWORD PTR [rip+0x2fe2]        # 0x404008
+   0x401026:    jmp    QWORD PTR [rip+0x2fe4]        # 0x404010
+</code></pre><p>Wait, what do the values pointed by 0x404008 and 0x404010? Let&rsquo;s check it. The first one is 0x00007ffff7ffe180, which is another argument for the resolution later. The second one is 0x00007ffff7fe8510.</p>
+<pre><code>gdb-peda$ x/g 0x404008
+0x404008:       0x00007ffff7ffe180
+gdb-peda$ x/g 0x404010
+0x404010:       0x00007ffff7fe8510
+</code></pre><p>We can check the mapping information with vmmap command. As you can see, 0x00007ffff7fe8510 corresponds to ld-2.31.so., which means it belongs to the dynamic linker/loader.</p>
+<pre><code>gdb-peda$ vmmap
+Start              End                Perm      Name
+...
+0x00007ffff7fd2000 0x00007ffff7fd3000 r--p      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+0x00007ffff7fd3000 0x00007ffff7ff3000 r-xp      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+0x00007ffff7ff3000 0x00007ffff7ffb000 r--p      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+0x00007ffff7ffc000 0x00007ffff7ffd000 r--p      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+0x00007ffff7ffd000 0x00007ffff7ffe000 rw-p      /usr/lib/x86_64-linux-gnu/ld-2.31.so
+0x00007ffff7ffe000 0x00007ffff7fff000 rw-p      mapped
+0x00007ffffffde000 0x00007ffffffff000 rw-p      [stack]
+</code></pre><p>Actually, its name is <code>_dl_runtime_resolve_xsave</code>.  <code>_dl_runtime_resolve_xsave</code> is a function served for the resolution. Basically, this function will use the parameters which we mentioned above to look up the symbol name &ldquo;puts\0&rdquo;, use this string to find the actual address of puts function in the libraries (libc), then update the address in the GOT (.got.plt) entry.</p>
+<pre><code>gdb-peda$ x/3i $pc
+=&gt; 0x7ffff7fe8510 &lt;_dl_runtime_resolve_xsave&gt;:          push   rbx
+   0x7ffff7fe8511 &lt;_dl_runtime_resolve_xsave+1&gt;:        mov    rbx,rsp
+   0x7ffff7fe8514 &lt;_dl_runtime_resolve_xsave+4&gt;:        and    rsp,0xffffffffffffffc0
+</code></pre><p>As you can imagine, there is a long trip when we&rsquo;re calling a function provided by the libc library. But fortunately, after the actual address is resolved, we don&rsquo;t need to go through the whole resolution again. Let&rsquo;s disassemble the puts function again to verify it.</p>
+<pre><code>gdb-peda$ disas 'puts@plt'
+Dump of assembler code for function puts@plt:
+   0x0000000000401030 &lt;+0&gt;:     jmp    QWORD PTR [rip+0x2fe2]        # 0x404018 &lt;puts@got.plt&gt;
+   0x0000000000401036 &lt;+6&gt;:     push   0x0
+   0x000000000040103b &lt;+11&gt;:    jmp    0x401020
+End of assembler dump.
+</code></pre><p>The actual address in the .got.plt entry is updated as 0x00007ffff7e635b0, which is located in the libc library. You can also set another breakpoint at 0x401144 (call the puts function again) and trace the program to verify the idea.</p>
+<pre><code>gdb-peda$ x/g 0x404018
+0x404018 &lt;puts@got.plt&gt;:        0x00007ffff7e635b0
+
+gdb-peda$ xinfo 0x00007ffff7e635b0
+0x7ffff7e635b0 (&lt;__GI__IO_puts&gt;:        push   r14)
+Virtual memory mapping:
+Start : 0x00007ffff7e12000
+End   : 0x00007ffff7f5d000
+Offset: 0x515b0
+Perm  : r-xp
+Name  : /usr/lib/x86_64-linux-gnu/libc-2.31.so
+</code></pre><h2 id="reference">Reference</h2>
+<ol>
+<li>Practical Binary Analysis, Dennis Andriesse.</li>
+<li>GOT and PLT for pwning. <a href="https://systemoverlord.com/2017/03/19/got-and-plt-for-pwning.html">[link]</a></li>
+<li>Understanding _dl_runtime_resolve(). <a href="https://ypl.coffee/dl-resolve/">[link]</a></li>
+</ol>
+
+  </div>
+
+  <div id=links>
+    
+      <a href="https://chuang76.github.io/posts/toefl/">&laquo;&nbsp;Toefl Preparation</a>
+    
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+
