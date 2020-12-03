@@ -413,10 +413,6 @@
       <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
       <ul>
         
-          <li><a href="https://chuang76.github.io/posts/about/">About</a></li>
-        
-          <li><a href="https://github.com/chuang76">Project</a></li>
-        
       </ul>
     </section>
 
@@ -447,7 +443,7 @@
 <p>GOT and PLT sections</p>
 <p>An ELF executable includes several sections. You can check section information with readelf command. To implement the lazy binding, we need two special sections called .got (.got.plt) and .plt.</p>
 <p>Global offset table (GOT) is a table which contains absolute addresses of external symbols. GOT is represented as .got and .got.plt sections in an ELF file. A program can look up its GOT and extract the absolute value, then redirect the position-independent reference to the absolute location. The relocation entries (i.e., symbol to absolute address) in GOT are filled by the linker.</p>
-<p>Procedure linkage table (PLT) is used to look up the addresses in GOT, and it is represented as .plt section in an ELF file. However, you probably would ask that why do we need PLT? It seems to be roundabout, but actually, it is necessary under a dynamic linked situation. The reason is at <em>compile</em> time, we have no idea about the absolute addresses of symbols.  So we need PLT as a stub to make an indirect jump. In this way, the original function calls can be unmodified. At runtime, the dynamic linker (ld.so) will be responsible for updating correct addresses.</p>
+<p>Procedure linkage table (PLT) is used to look up the addresses in GOT, and it is represented as .plt section in an ELF file. However, you probably would ask that why do we need PLT? It seems to be roundabout, but actually, it is necessary under a dynamic linked situation. The reason is at <em>compile</em> time, we have no idea about the absolute addresses of symbols.  So we need PLT as a stub to make an indirect jump. In this way, the original function calls can be unmodified. At runtime, the dynamic linker/loader (ld.so) will be responsible for updating correct addresses.</p>
 </li>
 </ol>
 <h2 id="experiment">Experiment</h2>
@@ -487,7 +483,7 @@ Breakpoint 1 at 0x401138: file p1.c, line 5.
 </code></pre><p>Next, as you can see, we are trying to look up the GOT entry.</p>
 <pre><code>gdb-peda$ x/i $pc
 =&gt; 0x401030 &lt;puts@plt&gt;: jmp    QWORD PTR [rip+0x2fe2]        # 0x404018 &lt;puts@got.plt&gt;
-</code></pre><p>But the interesting thing is, the next instruction does nothing about GOT. Why? The reason is this is our first time to call puts function and our program adopts <em>lazy binding</em>. Hence, before resolving the reference, we can not obtain the actual address of puts function. So it goes back to .plt section. A slot number (0x0) is pushed onto the stack. It is a parameter for the resolution later.</p>
+</code></pre><p>But the interesting thing is, the next instruction does nothing about GOT. Why? The reason is this is our first time to call puts function and our program adopts <em>lazy binding</em>. Hence, before resolving the reference, we can not obtain the actual address of puts function. So it goes back to .plt section. A slot number (0x0) is pushed onto the stack. It is a parameter used for resolving reference later.</p>
 <pre><code>gdb-peda$ x/2i $pc
 =&gt; 0x401036 &lt;puts@plt+6&gt;:       push   0x0
    0x40103b &lt;puts@plt+11&gt;:      jmp    0x401020
@@ -512,7 +508,7 @@ Start              End                Perm      Name
 0x00007ffff7ffd000 0x00007ffff7ffe000 rw-p      /usr/lib/x86_64-linux-gnu/ld-2.31.so
 0x00007ffff7ffe000 0x00007ffff7fff000 rw-p      mapped
 0x00007ffffffde000 0x00007ffffffff000 rw-p      [stack]
-</code></pre><p>Actually, its name is <code>_dl_runtime_resolve_xsave</code>.  <code>_dl_runtime_resolve_xsave</code> is a function served for the resolution. Basically, this function will use the parameters which we mentioned above to look up the symbol name &ldquo;puts\0&rdquo;, use this string to find the actual address of puts function in the libraries (libc), then update the address in the GOT (.got.plt) entry.</p>
+</code></pre><p>Actually, its name is <code>_dl_runtime_resolve_xsave</code>.  <code>_dl_runtime_resolve_xsave</code> is a function served for resolving reference. Basically, this function will use the parameters which we mentioned above to look up the symbol name &ldquo;puts\0&rdquo;, use this string to find the actual address of puts function in the libraries (libc), then update the address in the GOT (.got.plt) entry.</p>
 <pre><code>gdb-peda$ x/3i $pc
 =&gt; 0x7ffff7fe8510 &lt;_dl_runtime_resolve_xsave&gt;:          push   rbx
    0x7ffff7fe8511 &lt;_dl_runtime_resolve_xsave+1&gt;:        mov    rbx,rsp
