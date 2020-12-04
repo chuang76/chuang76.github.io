@@ -6,7 +6,18 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 02 Dec 2020 12:08:22 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 04 Dec 2020 14:47:55 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: payload</title>
+      <link>https://chuang76.github.io/posts/payload/</link>
+      <pubDate>Fri, 04 Dec 2020 14:47:55 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/payload/</guid>
+      <description>This is an exercise from the book: Practical Binary Analysis chapter 5. You can download it on the official website.
+First, we can use file command to determine the type of payload. As you can see, it is a file which contains ASCII text. Subsequently, further view the contents with cat command.
+$ file payload payload: ASCII text $ cat payload | head -n 5 H4sIABzY61gAA+xaD3RTVZq/Sf+lFJIof1r+2aenKKh0klJKi4MmJaUvWrTSFlgR0jRN20iadpKX UljXgROKjbUOKuOfWWfFnTlzZs/ZXTln9nTRcTHYERhnZ5c/R2RGV1lFTAFH/DNYoZD9vvvubd57 bcBl1ln3bL6e9Hvf9+733e/+v+/en0dqId80WYAWLVqI3LpooUXJgUpKFy6yEOsCy6KSRQtLLQsW EExdWkIEyzceGVA4JLmDgkCaA92XTXel9/9H6ftVNcv0Ot2orCe3E5RiJhuVbUw/fH3SxkbKSS78 v47MJtkgZynS2YhNxYeZa84NLF0G/DLhV66X5XK9TcVnsXSc6xQ8S1UCm4o/M5moOCHCqB3Geny2 However, it is hard to read.</description>
+    </item>
+    
     <item>
       <title>Lazy binding</title>
       <link>https://chuang76.github.io/posts/lazy_binding/</link>
