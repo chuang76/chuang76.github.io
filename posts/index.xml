@@ -6,7 +6,18 @@
     <description>Recent content in Posts on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 04 Dec 2020 14:47:55 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 06 Dec 2020 20:04:19 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: passcode</title>
+      <link>https://chuang76.github.io/posts/passcode/</link>
+      <pubDate>Sun, 06 Dec 2020 20:04:19 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/passcode/</guid>
+      <description>This is a challenge from pwnable.kr, it is a 32-bit ELF file without stripped.
+passcode@pwnable:~$ file passcode passcode: setgid ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-, for GNU/Linux 2.6.24, BuildID[sha1]=d2b7bd64f70e46b1b0eb7036b35b24a651c3666b, not stripped The source code could be displayed as follows.
+passcode@pwnable:~$ cat passcode.c #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt; void login(){ int passcode1; int passcode2; printf(&amp;#34;enter passcode1 : &amp;#34;); scanf(&amp;#34;%d&amp;#34;, passcode1); fflush(stdin); // ha! mommy told me that 32bit is vulnerable to bruteforcing :)  printf(&amp;#34;enter passcode2 : &amp;#34;); scanf(&amp;#34;%d&amp;#34;, passcode2); printf(&amp;#34;checking.</description>
+    </item>
+    
     <item>
       <title>Writeup: payload</title>
       <link>https://chuang76.github.io/posts/payload/</link>

