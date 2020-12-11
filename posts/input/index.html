@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="">
+
+    
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet" media="print" type="text/css" onload="this.media='all'">
+    
+
+    <title>
+      
+      
+         Writeup: input 
+      
+    </title>
+    <link rel="canonical" href="https://chuang76.github.io/posts/input/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+     
+    font-family: 'Verdana'; 
+     
+     
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify { float: left; }
+  .right-justify { float:right; }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, .date {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content .date {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right:0.5em;;
+  }
+
+  #links :nth-child(2) {
+    margin-left:0.5em;;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    *, #nav h1 a {
+      color: #FDFDFD;
+    }
+
+    body {
+      background: #121212;
+    }
+
+    pre, code {
+      background-color: #262626;
+    }
+
+    #sub-header, .date {
+      color: #BABABA;
+    }
+
+    hr {
+      background: #EBEBEB;
+    }
+  }
+</style>
+
+
+    </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Writeup: input </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>This is a challenge from <a href="https://pwnable.kr/">pwnable.kr</a>. After connecting to the remote server with ssh command (or downloading the files with scp command), we can view the source code as follows. As you can see, our goal is to clear all of the stages and capture the flag.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;arpa/inet.h&gt;
+
+int main(int argc, char* argv[], char* envp[]){
+    printf(&quot;Welcome to pwnable.kr\n&quot;);
+    printf(&quot;Let's see if you know how to give input to program\n&quot;);
+    printf(&quot;Just give me correct inputs then you will get the flag :)\n&quot;);
+
+    // argv
+    if(argc != 100) return 0;
+    if(strcmp(argv['A'],&quot;\x00&quot;)) return 0;
+    if(strcmp(argv['B'],&quot;\x20\x0a\x0d&quot;)) return 0;
+    printf(&quot;Stage 1 clear!\n&quot;);
+
+    // stdio
+    char buf[4];
+    read(0, buf, 4);
+    if(memcmp(buf, &quot;\x00\x0a\x00\xff&quot;, 4)) return 0;
+    read(2, buf, 4);
+    if(memcmp(buf, &quot;\x00\x0a\x02\xff&quot;, 4)) return 0;
+    printf(&quot;Stage 2 clear!\n&quot;);
+
+    // env
+    if(strcmp(&quot;\xca\xfe\xba\xbe&quot;, getenv(&quot;\xde\xad\xbe\xef&quot;))) return 0;
+    printf(&quot;Stage 3 clear!\n&quot;);
+
+    // file
+    FILE* fp = fopen(&quot;\x0a&quot;, &quot;r&quot;);
+    if(!fp) return 0;
+    if( fread(buf, 4, 1, fp)!=1 ) return 0;
+    if( memcmp(buf, &quot;\x00\x00\x00\x00&quot;, 4) ) return 0;
+    fclose(fp);
+    printf(&quot;Stage 4 clear!\n&quot;);
+
+    // network
+    int sd, cd;
+    struct sockaddr_in saddr, caddr;
+    sd = socket(AF_INET, SOCK_STREAM, 0);
+    if(sd == -1){
+        printf(&quot;socket error, tell admin\n&quot;);
+        return 0;
+    }
+    saddr.sin_family = AF_INET;
+    saddr.sin_addr.s_addr = INADDR_ANY;
+    saddr.sin_port = htons( atoi(argv['C']) );
+    if(bind(sd, (struct sockaddr*)&amp;saddr, sizeof(saddr)) &lt; 0){
+    	printf(&quot;bind error, use another port\n&quot;);
+        return 1;
+    }
+    listen(sd, 1);
+    int c = sizeof(struct sockaddr_in);
+    cd = accept(sd, (struct sockaddr *)&amp;caddr, (socklen_t*)&amp;c);
+    if(cd &lt; 0){
+        printf(&quot;accept error, tell admin\n&quot;);
+        return 0;
+    }
+    if( recv(cd, buf, 4, 0) != 4 ) return 0;
+    if(memcmp(buf, &quot;\xde\xad\xbe\xef&quot;, 4)) return 0;
+    printf(&quot;Stage 5 clear!\n&quot;);
+
+    // here's your flag
+    system(&quot;/bin/cat flag&quot;);
+    return 0;
+}
+</code></pre><h2 id="stage-1-execve">Stage 1: execve()</h2>
+<p>Stage 1 requires us to provide 100 arguments. Apart from that, the 65th (&lsquo;A&rsquo;) and 66th (&lsquo;B&rsquo;) arguments should be &ldquo;\x00&rdquo; and &ldquo;\x20\x0a\x0d&rdquo;, respectively. We can use the function <code>execve()</code> to execute the program referred by the pathname and specify the arguments and the environment. The prototype of <code>execve()</code> is as follows. Note that both argv and envp must be terminated by a NULL pointer.</p>
+<pre><code>#include &lt;unistd.h&gt;
+int execve(const char *pathname, char *const argv[], char *const envp[]);
+</code></pre><p>Here is a short example of <code>execve()</code>, it can list the contents of current directory.</p>
+<pre><code>#include &lt;unistd.h&gt;
+
+int main(int argc, char** argv)
+{
+        char* args[] = {&quot;ls&quot;, &quot;-al&quot;, NULL};
+        char* env[] = {NULL};
+        execve(&quot;/bin/ls&quot;, args, env);
+        return 0;
+}
+</code></pre><p>Hence, according to the source code, we can write the payload to clear stage 1 as follows.</p>
+<pre><code>char* args[101] = {0};
+char* env[] = {NULL};
+
+for (int i = 0; i &lt; 100; i++)
+	args[i] = &quot;a&quot;;
+
+args['A'] = &quot;\x00&quot;;
+args['B'] = &quot;\x20\x0a\x0d&quot;;
+args[100] = NULL;
+
+execve(&quot;/home/input2/input&quot;, args, env);
+</code></pre><!-- raw HTML omitted -->
+<h2 id="stage-2-pipes-and-io-redirection">Stage 2: Pipes and I/O Redirection</h2>
+<p>Next, the program reads something from the standard input (namely stdin, whose file descriptor is 0) into a buffer, which should be &ldquo;\x00\x0a\x00\xff&rdquo;. Again, the program reads something from the standard error (stderr, whose file descriptor is 2) into the buffer, which should be &ldquo;\x00\x0a\x02\xff&rdquo;. We can use the concept of pipes and I/O redirection to clear this stage.</p>
+<p>Pipes are used to redirect a stream from one program to another. In the Unix-based systems, <code>pipe()</code> function is provided to create the pipes. It takes an array of two integers as a argument, pipefd[0] is set up for reading, pipefd[1] is set up for writing. Therefore, if a process is going to write something to another process, the first one integer, pipefd[0], should be disabled. On the other hand, another process that is going to read something should disable the second one integer, i.e., pipefd[1].</p>
+<pre><code>#include &lt;unistd.h&gt;
+int pipe(int pipefd[2]);
+</code></pre><p>Here is a short example of <code>pipe()</code>: parent process receives data &ldquo;Hello world&rdquo; from the child process.</p>
+<pre><code>#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char** argv)
+{
+        int     fd[2], nbytes;
+        pid_t   pid;
+        char    str[] = &quot;Hello world\n&quot;;
+        char    buf[80];
+
+        pipe(fd);				// create pipes
+
+        pid = fork();
+
+        if (pid == -1) {
+                perror(&quot;fork&quot;);
+                exit(1);
+        }
+
+        if (pid == 0) {
+                // child process: write
+                sleep(1);
+                close(fd[0]);
+                write(fd[1], str, strlen(str) + 1);
+                exit(0);
+        }
+        else {
+                // parent process: read
+                close(fd[1]);
+                nbytes = read(fd[0], buf, sizeof(buf));
+                printf(&quot;Received: %s&quot;, buf);
+        }
+
+        return 0;
+}
+</code></pre><p>Besides, we can use <code>dup2()</code> system call to duplicate the input descriptor of the pipe onto the stdin or stderr.</p>
+<pre><code>int fd_stdin[2], fd_stderr[2];
+pid_t pid;                      // child process pid
+pipe(fd_stdin);                 // create pipes
+pipe(fd_stderr);
+
+pid = fork();
+if (pid == -1) {
+	perror(&quot;fork&quot;); 
+	exit(1); 
+}
+if (pid == 0) {
+    close(fd_stdin[0]);
+    write(fd_stdin[1], &quot;\x00\x0a\x00\xff&quot;, 4);     
+
+    close(fd_stderr[0]);
+    write(fd_stderr[1], &quot;\x00\x0a\x02\xff&quot;, 4);
+}
+else {
+    close(fd_stdin[1]);
+    dup2(fd_stdin[0], 0);       // (old fd, new fd)
+
+    close(fd_stderr[1]);
+    dup2(fd_stderr[0], 2);
+}
+</code></pre><!-- raw HTML omitted -->
+<h2 id="stage-3-environment-variable">Stage 3: Environment variable</h2>
+<p>Stage 3 is about the environment variable. As we mentioned above (at stage 1), we can use execve() to set up the environment. Note that the name of the variable is &ldquo;xde\xad\xbe\xef&rdquo; while the value is &ldquo;\xca\xfe\xba\xbe&rdquo;. Do not mix up.</p>
+<pre><code>char* env[] = {&quot;\xde\xad\xbe\xef=\xca\xfe\xba\xbe&quot;, NULL};
+</code></pre><!-- raw HTML omitted -->
+<h2 id="stage-4-fopen-and-fwrite">Stage 4: fopen() and fwrite()</h2>
+<p>Let&rsquo;s move on. At stage 4, the program reads a file called &ldquo;x0a&rdquo;, and the first 4 bytes of the file is &ldquo;\x00\x00\x00\x00&rdquo;. Thus, we can just create a file and write the string into this specified file.</p>
+<pre><code>FILE* fp;
+fp = fopen(&quot;\x0a&quot;, &quot;wb&quot;);
+if (fp == NULL) {
+    perror(&quot;fopen&quot;);
+    exit(1);
+}
+fwrite(&quot;\x00\x00\x00\x00&quot;, 4, 1, fp);
+fclose(fp);
+</code></pre><!-- raw HTML omitted -->
+<h2 id="stage-5-socket">Stage 5: Socket</h2>
+<p>The last one, stage 5, is about socket programming. The program creates a socket, whose domain is AP_INET (IPv4) and the type is SOCK_STREAM (TCP). After the bind and accept operation, it receives the data &ldquo;\xde\xad\xbe\xef&rdquo; from a certain port. The port number is specified by the argv[&lsquo;C&rsquo;]. To respond to this, we should create a socket (as a client), then send the data to the target process. Again, the port number, which is argv[&lsquo;C&rsquo;] in this case, should be assigned with execve() function.</p>
+<p>Hence, we can combine 5 parts into the payload called <code>exp.c</code> as follow.</p>
+<pre><code>#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;arpa/inet.h&gt;
+
+int main(int argc, char** argv)
+{
+        // stage 1: execve
+        char* args[101] = {0};
+        char* env[] = {&quot;\xde\xad\xbe\xef=\xca\xfe\xba\xbe&quot;, NULL};    
+
+        for (int i = 0; i &lt; 100; i++)
+                args[i] = &quot;a&quot;;  
+
+        args['A'] = &quot;\x00&quot;;
+        args['B'] = &quot;\x20\x0a\x0d&quot;;
+        args['C'] = &quot;9527&quot;;
+        args[100] = NULL;
+
+        // execve(&quot;/home/input2/input&quot;, args, env);
+
+        // stage 2: I/O redirection
+        int     fd_stdin[2], fd_stderr[2];         // file descriptor 
+        pid_t   pid;                               // child process pid
+        pipe(fd_stdin);
+        pipe(fd_stderr);
+
+        // stage 4: create a file, write
+        FILE*   fp;
+        fp = fopen(&quot;\x0a&quot;, &quot;wb&quot;);
+        if (fp == NULL) {
+                perror(&quot;fopen&quot;);
+                exit(1);
+        }
+        fwrite(&quot;\x00\x00\x00\x00&quot;, 4, 1, fp);
+        fclose(fp);
+
+        pid = fork();
+        if (pid == -1) {
+                perror(&quot;fork&quot;);
+                exit(1);
+        }
+
+        if (pid == 0) {
+                // child: write
+                close(fd_stdin[0]);
+                write(fd_stdin[1], &quot;\x00\x0a\x00\xff&quot;, 4);
+
+                close(fd_stderr[0]);
+                write(fd_stderr[1], &quot;\x00\x0a\x02\xff&quot;, 4);
+        }
+        else {
+                // parent: read
+                close(fd_stdin[1]);
+                dup2(fd_stdin[0], 0);           // (old fd, new fd)
+
+                close(fd_stderr[1]);
+                dup2(fd_stderr[0], 2);
+
+                execve(&quot;/home/input2/input&quot;, args, env);
+        }
+        
+        // stage 5: socket
+        int sd;
+        sd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sd == -1) {
+                perror(&quot;socket&quot;);
+                exit(1);
+        }
+
+        struct sockaddr_in saddr;
+        bzero(&amp;saddr, sizeof(saddr));
+        saddr.sin_family = AF_INET;
+        saddr.sin_addr.s_addr = inet_addr(&quot;127.0.0.1&quot;);    // local host
+        saddr.sin_port = htons(9527);
+
+        int ret = connect(sd, (struct sockaddr *)&amp;saddr, sizeof(saddr));
+
+        if (ret == -1) {
+                perror(&quot;connect&quot;);
+                exit(1);
+        }
+
+        // send data
+        send(sd, &quot;\xde\xad\xbe\xef&quot;, 4, 0);
+        close(sd);   
+        return 0;
+}
+</code></pre><p>However, we don&rsquo;t have the permission to create or write the program under <code>/home/input2</code>. So we need to create a directory under <code>/tmp</code>, then upload or create our exploit program in this directory. Apart from that, we should create a symbolic link to reference the original executable flag.</p>
+<pre><code>input2@pwnable:/tmp/rax$ ln -sf /home/input2/flag flag 
+
+input2@pwnable:/tmp/rax$ ls -al
+total 514476
+drwxrwxr-x     2 input2 input2      4096 Dec 11 08:50 .
+drwxrwx-wt 18306 root   root   526786560 Dec 11 08:59 ..
+-rwxrwxr-x     1 input2 input2     13544 Dec  9 04:00 exp
+-rwxrwxr-x     1 input2 input2      1866 Dec  9 04:00 exp.c
+lrwxrwxrwx     1 input2 input2        17 Dec  9 03:59 flag -&gt; /home/input2/flag
+</code></pre><p>Here is the flag.</p>
+<pre><code>input2@pwnable:/tmp/rax$ ./exp
+Welcome to pwnable.kr
+Let's see if you know how to give input to program
+Just give me correct inputs then you will get the flag :)
+Stage 1 clear!
+Stage 2 clear!
+Stage 3 clear!
+Stage 4 clear!
+Stage 5 clear!
+Mommy! I learned how to pass various input in Linux :)
+</code></pre>
+  </div>
+
+  <div id=links>
+    
+      <a href="https://chuang76.github.io/posts/passcode/">&laquo;&nbsp;Writeup: passcode</a>
+    
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+

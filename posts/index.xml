@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 06 Dec 2020 20:04:19 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Dec 2020 15:00:11 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: input</title>
+      <link>https://chuang76.github.io/posts/input/</link>
+      <pubDate>Wed, 09 Dec 2020 15:00:11 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/input/</guid>
+      <description>This is a challenge from pwnable.kr. After connecting to the remote server with ssh command (or downloading the files with scp command), we can view the source code as follows. As you can see, our goal is to clear all of the stages and capture the flag.
+#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; #include &amp;lt;string.h&amp;gt; #include &amp;lt;sys/socket.h&amp;gt; #include &amp;lt;arpa/inet.h&amp;gt; int main(int argc, char* argv[], char* envp[]){ printf(&amp;quot;Welcome to pwnable.kr\n&amp;quot;); printf(&amp;quot;Let&#39;s see if you know how to give input to program\n&amp;quot;); printf(&amp;quot;Just give me correct inputs then you will get the flag :)\n&amp;quot;); // argv if(argc !</description>
+    </item>
+    
     <item>
       <title>Writeup: passcode</title>
       <link>https://chuang76.github.io/posts/passcode/</link>
