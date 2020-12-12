@@ -6,7 +6,17 @@
     <description>Recent content in Posts on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 09 Dec 2020 15:00:11 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 12 Dec 2020 10:39:51 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: leg</title>
+      <link>https://chuang76.github.io/posts/leg/</link>
+      <pubDate>Sat, 12 Dec 2020 10:39:51 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/leg/</guid>
+      <description>This is a challenge from pwnable.kr. The part of the source code and its assembly code are provided as follows. To run the executable flag, we need to take the summation of key1(), key2(), and key3() as the input.
+if( (key1()+key2()+key3()) == key ){ printf(&amp;quot;Congratz!\n&amp;quot;); int fd = open(&amp;quot;flag&amp;quot;, O_RDONLY); char buf[100]; int r = read(fd, buf, 100); write(0, buf, r); } (gdb) disass main Dump of assembler code for function main: 0x00008d3c &amp;lt;+0&amp;gt;: push {r4, r11, lr} 0x00008d40 &amp;lt;+4&amp;gt;: add r11, sp, #8 0x00008d44 &amp;lt;+8&amp;gt;: sub sp, sp, #12 0x00008d48 &amp;lt;+12&amp;gt;: mov r3, #0 0x00008d4c &amp;lt;+16&amp;gt;: str r3, [r11, #-16] 0x00008d50 &amp;lt;+20&amp;gt;: ldr r0, [pc, #104] ; 0x8dc0 &amp;lt;main+132&amp;gt; 0x00008d54 &amp;lt;+24&amp;gt;: bl 0xfb6c &amp;lt;printf&amp;gt; 0x00008d58 &amp;lt;+28&amp;gt;: sub r3, r11, #16 0x00008d5c &amp;lt;+32&amp;gt;: ldr r0, [pc, #96] ; 0x8dc4 &amp;lt;main+136&amp;gt; 0x00008d60 &amp;lt;+36&amp;gt;: mov r1, r3 0x00008d64 &amp;lt;+40&amp;gt;: bl 0xfbd8 &amp;lt;__isoc99_scanf&amp;gt; 0x00008d68 &amp;lt;+44&amp;gt;: bl 0x8cd4 &amp;lt;key1&amp;gt; 0x00008d6c &amp;lt;+48&amp;gt;: mov r4, r0 0x00008d70 &amp;lt;+52&amp;gt;: bl 0x8cf0 &amp;lt;key2&amp;gt; 0x00008d74 &amp;lt;+56&amp;gt;: mov r3, r0 0x00008d78 &amp;lt;+60&amp;gt;: add r4, r4, r3 0x00008d7c &amp;lt;+64&amp;gt;: bl 0x8d20 &amp;lt;key3&amp;gt; 0x00008d80 &amp;lt;+68&amp;gt;: mov r3, r0 0x00008d84 &amp;lt;+72&amp;gt;: add r2, r4, r3 0x00008d88 &amp;lt;+76&amp;gt;: ldr r3, [r11, #-16] 0x00008d8c &amp;lt;+80&amp;gt;: cmp r2, r3 0x00008d90 &amp;lt;+84&amp;gt;: bne 0x8da8 &amp;lt;main+108&amp;gt; 0x00008d94 &amp;lt;+88&amp;gt;: ldr r0, [pc, #44] ; 0x8dc8 &amp;lt;main+140&amp;gt; 0x00008d98 &amp;lt;+92&amp;gt;: bl 0x1050c &amp;lt;puts&amp;gt; 0x00008d9c &amp;lt;+96&amp;gt;: ldr r0, [pc, #40] ; 0x8dcc &amp;lt;main+144&amp;gt; 0x00008da0 &amp;lt;+100&amp;gt;: bl 0xf89c &amp;lt;system&amp;gt; 0x00008da4 &amp;lt;+104&amp;gt;: b 0x8db0 &amp;lt;main+116&amp;gt; 0x00008da8 &amp;lt;+108&amp;gt;: ldr r0, [pc, #32] ; 0x8dd0 &amp;lt;main+148&amp;gt; 0x00008dac &amp;lt;+112&amp;gt;: bl 0x1050c &amp;lt;puts&amp;gt; 0x00008db0 &amp;lt;+116&amp;gt;: mov r3, #0 0x00008db4 &amp;lt;+120&amp;gt;: mov r0, r3 0x00008db8 &amp;lt;+124&amp;gt;: sub sp, r11, #8 0x00008dbc &amp;lt;+128&amp;gt;: pop {r4, r11, pc} 0x00008dc0 &amp;lt;+132&amp;gt;: andeq r10, r6, r12, lsl #9 0x00008dc4 &amp;lt;+136&amp;gt;: andeq r10, r6, r12, lsr #9 0x00008dc8 &amp;lt;+140&amp;gt;: ; &amp;lt;UNDEFINED&amp;gt; instruction: 0x0006a4b0 0x00008dcc &amp;lt;+144&amp;gt;: ; &amp;lt;UNDEFINED&amp;gt; instruction: 0x0006a4bc 0x00008dd0 &amp;lt;+148&amp;gt;: andeq r10, r6, r4, asr #9 End of assembler dump.</description>
+    </item>
+    
     <item>
       <title>Writeup: input</title>
       <link>https://chuang76.github.io/posts/input/</link>

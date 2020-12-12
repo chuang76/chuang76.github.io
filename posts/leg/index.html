@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="">
+
+    
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet" media="print" type="text/css" onload="this.media='all'">
+    
+
+    <title>
+      
+      
+         Writeup: leg 
+      
+    </title>
+    <link rel="canonical" href="https://chuang76.github.io/posts/leg/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+     
+    font-family: 'Verdana'; 
+     
+     
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify { float: left; }
+  .right-justify { float:right; }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, .date {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content .date {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right:0.5em;;
+  }
+
+  #links :nth-child(2) {
+    margin-left:0.5em;;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    *, #nav h1 a {
+      color: #FDFDFD;
+    }
+
+    body {
+      background: #121212;
+    }
+
+    pre, code {
+      background-color: #262626;
+    }
+
+    #sub-header, .date {
+      color: #BABABA;
+    }
+
+    hr {
+      background: #EBEBEB;
+    }
+  }
+</style>
+
+
+    </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Writeup: leg </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>This is a challenge from <a href="https://pwnable.kr/">pwnable.kr</a>. The part of the source code and its assembly code are provided as follows. To run the executable flag, we need to take the summation of key1(), key2(), and key3() as the input.</p>
+<pre><code>if( (key1()+key2()+key3()) == key ){
+    printf(&quot;Congratz!\n&quot;);
+    int fd = open(&quot;flag&quot;, O_RDONLY);
+    char buf[100];
+    int r = read(fd, buf, 100);
+    write(0, buf, r);
+ }
+</code></pre><pre><code>(gdb) disass main
+Dump of assembler code for function main:
+   0x00008d3c &lt;+0&gt;:     push    {r4, r11, lr}
+   0x00008d40 &lt;+4&gt;:     add     r11, sp, #8
+   0x00008d44 &lt;+8&gt;:     sub     sp, sp, #12
+   0x00008d48 &lt;+12&gt;:    mov     r3, #0
+   0x00008d4c &lt;+16&gt;:    str     r3, [r11, #-16]
+   0x00008d50 &lt;+20&gt;:    ldr     r0, [pc, #104]  ; 0x8dc0 &lt;main+132&gt;
+   0x00008d54 &lt;+24&gt;:    bl      0xfb6c &lt;printf&gt;
+   0x00008d58 &lt;+28&gt;:    sub     r3, r11, #16
+   0x00008d5c &lt;+32&gt;:    ldr     r0, [pc, #96]   ; 0x8dc4 &lt;main+136&gt;
+   0x00008d60 &lt;+36&gt;:    mov     r1, r3
+   0x00008d64 &lt;+40&gt;:    bl      0xfbd8 &lt;__isoc99_scanf&gt;
+   0x00008d68 &lt;+44&gt;:    bl      0x8cd4 &lt;key1&gt;
+   0x00008d6c &lt;+48&gt;:    mov     r4, r0
+   0x00008d70 &lt;+52&gt;:    bl      0x8cf0 &lt;key2&gt;
+   0x00008d74 &lt;+56&gt;:    mov     r3, r0
+   0x00008d78 &lt;+60&gt;:    add     r4, r4, r3
+   0x00008d7c &lt;+64&gt;:    bl      0x8d20 &lt;key3&gt;
+   0x00008d80 &lt;+68&gt;:    mov     r3, r0
+   0x00008d84 &lt;+72&gt;:    add     r2, r4, r3
+   0x00008d88 &lt;+76&gt;:    ldr     r3, [r11, #-16]
+   0x00008d8c &lt;+80&gt;:    cmp     r2, r3
+   0x00008d90 &lt;+84&gt;:    bne     0x8da8 &lt;main+108&gt;
+   0x00008d94 &lt;+88&gt;:    ldr     r0, [pc, #44]   ; 0x8dc8 &lt;main+140&gt;
+   0x00008d98 &lt;+92&gt;:    bl      0x1050c &lt;puts&gt;
+   0x00008d9c &lt;+96&gt;:    ldr     r0, [pc, #40]   ; 0x8dcc &lt;main+144&gt;
+   0x00008da0 &lt;+100&gt;:   bl      0xf89c &lt;system&gt;
+   0x00008da4 &lt;+104&gt;:   b       0x8db0 &lt;main+116&gt;
+   0x00008da8 &lt;+108&gt;:   ldr     r0, [pc, #32]   ; 0x8dd0 &lt;main+148&gt;
+   0x00008dac &lt;+112&gt;:   bl      0x1050c &lt;puts&gt;
+   0x00008db0 &lt;+116&gt;:   mov     r3, #0
+   0x00008db4 &lt;+120&gt;:   mov     r0, r3           
+   0x00008db8 &lt;+124&gt;:   sub     sp, r11, #8         
+   0x00008dbc &lt;+128&gt;:   pop     {r4, r11, pc}            
+   0x00008dc0 &lt;+132&gt;:   andeq   r10, r6, r12, lsl #9            
+   0x00008dc4 &lt;+136&gt;:   andeq   r10, r6, r12, lsr #9          
+   0x00008dc8 &lt;+140&gt;:                   ; &lt;UNDEFINED&gt; instruction: 0x0006a4b0
+   0x00008dcc &lt;+144&gt;:                   ; &lt;UNDEFINED&gt; instruction: 0x0006a4bc
+   0x00008dd0 &lt;+148&gt;:   andeq   r10, r6, r4, asr #9           
+End of assembler dump.            
+(gdb) disass key1
+Dump of assembler code for function key1:
+   0x00008cd4 &lt;+0&gt;:     push    {r11}           ; (str r11, [sp, #-4]!)
+   0x00008cd8 &lt;+4&gt;:     add     r11, sp, #0
+   0x00008cdc &lt;+8&gt;:     mov     r3, pc
+   0x00008ce0 &lt;+12&gt;:    mov     r0, r3
+   0x00008ce4 &lt;+16&gt;:    sub     sp, r11, #0
+   0x00008ce8 &lt;+20&gt;:    pop     {r11}           ; (ldr r11, [sp], #4)
+   0x00008cec &lt;+24&gt;:    bx      lr
+End of assembler dump.
+(gdb) disass key2
+Dump of assembler code for function key2:
+   0x00008cf0 &lt;+0&gt;:     push    {r11}           ; (str r11, [sp, #-4]!)
+   0x00008cf4 &lt;+4&gt;:     add     r11, sp, #0
+   0x00008cf8 &lt;+8&gt;:     push    {r6}            ; (str r6, [sp, #-4]!)
+   0x00008cfc &lt;+12&gt;:    add     r6, pc, #1
+   0x00008d00 &lt;+16&gt;:    bx      r6
+   0x00008d04 &lt;+20&gt;:    mov     r3, pc
+   0x00008d06 &lt;+22&gt;:    adds    r3, #4
+   0x00008d08 &lt;+24&gt;:    push    {r3}
+   0x00008d0a &lt;+26&gt;:    pop     {pc}
+   0x00008d0c &lt;+28&gt;:    pop     {r6}            ; (ldr r6, [sp], #4)
+   0x00008d10 &lt;+32&gt;:    mov     r0, r3
+   0x00008d14 &lt;+36&gt;:    sub     sp, r11, #0
+   0x00008d18 &lt;+40&gt;:    pop     {r11}           ; (ldr r11, [sp], #4)
+   0x00008d1c &lt;+44&gt;:    bx      lr
+End of assembler dump.
+(gdb) disass key3
+Dump of assembler code for function key3:
+   0x00008d20 &lt;+0&gt;:     push    {r11}           ; (str r11, [sp, #-4]!)
+   0x00008d24 &lt;+4&gt;:     add     r11, sp, #0
+   0x00008d28 &lt;+8&gt;:     mov     r3, lr
+   0x00008d2c &lt;+12&gt;:    mov     r0, r3
+   0x00008d30 &lt;+16&gt;:    sub     sp, r11, #0
+   0x00008d34 &lt;+20&gt;:    pop     {r11}           ; (ldr r11, [sp], #4)
+   0x00008d38 &lt;+24&gt;:    bx      lr
+End of assembler dump.
+(gdb)
+</code></pre><!-- raw HTML omitted -->
+<h2 id="key1">key1()</h2>
+<p>In ARM instruction set, the return value is stored in register R0. Apart from that, the program counter = PC + 8 in ARM mode, program counter = PC + 4 in Thumb mode.</p>
+<pre><code>0x00008cdc &lt;+8&gt;:     mov     r3, pc
+0x00008ce0 &lt;+12&gt;:    mov     r0, r3
+</code></pre><p>Hence, the return value is 0x8cdc + 8 = 0x8ce4.</p>
+<!-- raw HTML omitted -->
+<h2 id="key2">key2()</h2>
+<p>BX (branch and exchange) performs a branch by copying the contents of the register. Besides, the value of Rn[0] determines the instructions will be decoded in ARM or Thumb mode. If Rn[0] = 0, subsequent instruction stream will be decoded as ARM instructions; if Rn[0] = 1, subsequent instruction stream will be decoded as Thumb instructions.</p>
+<pre><code>0x00008cfc &lt;+12&gt;:    add     r6, pc, #1
+0x00008d00 &lt;+16&gt;:    bx      r6
+0x00008d04 &lt;+20&gt;:    mov     r3, pc
+0x00008d06 &lt;+22&gt;:    adds    r3, #4
+0x00008d08 &lt;+24&gt;:    push    {r3}
+0x00008d0a &lt;+26&gt;:    pop     {pc}
+0x00008d0c &lt;+28&gt;:    pop     {r6}            ; (ldr r6, [sp], #4)
+0x00008d10 &lt;+32&gt;:    mov     r0, r3
+</code></pre><p>The program is in ARM mode at first, and R6 = PC + 1, which means R6 = (0x8cfc + 8) + 1 = 0x8d05. Since the bit 0 of R6 is 1, when BX instruction is performed, the following instructions are going to decoded as Thumb instructions. Therefore, R0 = R3 = PC +4 = (0x8d04 + 4) + 4 = 0x8d0c. That is, the return value is 0x8d0c.</p>
+<!-- raw HTML omitted -->
+<h2 id="key3">key3()</h2>
+<p>In the function key3(), the return value R0 is stored as its return address. According to the source code, we can know that the return address of function key3() is 0x8d80.</p>
+<pre><code>0x00008d28 &lt;+8&gt;:     mov     r3, lr
+0x00008d2c &lt;+12&gt;:    mov     r0, r3
+</code></pre><p>Therefore, the summation of key1(), key2(), and key3() = 0x8ce4 + 0x8d0c+ 0x8d80 = 108400.</p>
+<p>Here is the flag.</p>
+<pre><code>/ $ ./leg
+Daddy has very strong arm! : 108400
+Congratz!
+My daddy has a lot of ARMv5te muscle!
+</code></pre>
+  </div>
+
+  <div id=links>
+    
+      <a href="https://chuang76.github.io/posts/input/">&laquo;&nbsp;Writeup: input</a>
+    
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+
