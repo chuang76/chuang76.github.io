@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.79.0" />
     <meta charset="utf-8">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,10 +15,10 @@
     <title>
       
       
-         Before Dawn 
+         Writeup: mistake 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/mistake/">
 
     <style>
   * {
@@ -409,7 +408,6 @@
 </style>
 
 
-    <link rel="alternate" type="application/rss+xml" href="https://chuang76.github.io/index.xml" title="Before Dawn" />
     </head>
 
   <body>
@@ -422,76 +420,68 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Writeup: mistake </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>This is a challenge from <a href="https://pwnable.kr/">pwnable.kr</a>. According to the hint, the solution is about <a href="https://en.cppreference.com/w/c/language/operator_precedence">operator priority</a>. Apart from that, we can observe that there are some mistakes in the source code.</p>
+<pre><code>if (fd = open(&quot;/home/mistake/password&quot;, O_RDONLY, 0400) &lt; 0) {
+	printf(&quot;can't open password %d\n&quot;, fd);
+	return 0;
+}
+</code></pre><p>The priority of the assignment operator (=) is less than the relation operator (&lt;). Since opening a file called password is successful, the return value is nonnegative. Hence, the value of fd is 1.</p>
+<p>Subsequently, the program reads the contents of fd (1 means stdin), and stores the contents into a buffer called pw_buf1. Besides, another buffer called pw_buf2 is provided for the user to enter arbitrary values. The contents of pw_buf2 then are applied to XOR encryption. Finally, if the encrypted pw_buf2 is equal to pw_buf1, we can view the executable flag.</p>
+<p>Now, since we can control both pw_buf1 and pw_buf2, it is simple to capture the flag. Let&rsquo;s write a simple program called p1.c to figure out what values should be entered.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#define PW_LEN 10
+#define XORKEY 1
+
+void xor(char* s, int len) {
+        for (int i = 0; i &lt; len; i++) 
+                s[i] ^= XORKEY;
+}
+
+int main(int argc, char** argv)
+{
+        char pw[PW_LEN + 1];
+        scanf(&quot;%10s&quot;, pw);
+        printf(&quot;pw = %s\n&quot;, pw);
+
+        xor(pw, 10);
+        printf(&quot;after xor, pw = %s\n&quot;, pw);
+
+        return 0;
+}
+</code></pre><p>If we enter 0123456789 as pw, its (XOR) encrypted value is 1032547698. Hence, we should enter 1032547698 as pw_buf1, and 0123456789 as pw_buf2.</p>
+<pre><code>0123456789
+pw = 0123456789
+after xor, pw = 1032547698
+</code></pre><p>Here is the flag.</p>
+<pre><code>mistake@pwnable:~$ ./mistake
+do not bruteforce...
+1032547698
+input password : 0123456789
+Password OK
+Mommy, the operator priority always confuses me :(
+</code></pre>
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/mistake/">Writeup: mistake</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
+      <a href="https://chuang76.github.io/posts/leg/">&laquo;&nbsp;Writeup: leg</a>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/leg/">Writeup: leg</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/input/">Writeup: input</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/passcode/">Writeup: passcode</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/payload/">Walkthrough: payload</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/lazy_binding/">Lazy binding</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/toefl/">Toefl preparation</a></h2>
-        <div class=date>
-          
-            November 2020
-          
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 

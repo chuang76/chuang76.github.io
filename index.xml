@@ -6,7 +6,17 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 12 Dec 2020 10:39:51 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Dec 2020 12:49:21 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: mistake</title>
+      <link>https://chuang76.github.io/posts/mistake/</link>
+      <pubDate>Mon, 14 Dec 2020 12:49:21 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/mistake/</guid>
+      <description>This is a challenge from pwnable.kr. According to the hint, the solution is about operator priority. Apart from that, we can observe that there are some mistakes in the source code.
+if (fd = open(&amp;quot;/home/mistake/password&amp;quot;, O_RDONLY, 0400) &amp;lt; 0) { printf(&amp;quot;can&#39;t open password %d\n&amp;quot;, fd); return 0; } The priority of the assignment operator (=) is less than the relation operator (&amp;lt;). Since opening a file called password is successful, the return value is nonnegative.</description>
+    </item>
+    
     <item>
       <title>Writeup: leg</title>
       <link>https://chuang76.github.io/posts/leg/</link>
