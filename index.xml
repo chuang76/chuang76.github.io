@@ -6,7 +6,17 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 14 Dec 2020 12:49:21 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Dec 2020 13:49:34 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Users and Groups</title>
+      <link>https://chuang76.github.io/posts/users_and_groups/</link>
+      <pubDate>Mon, 14 Dec 2020 13:49:34 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/users_and_groups/</guid>
+      <description>Identifier Imagine a situation: there is a file contains sensitive information in the system. Obviously, regular users should not access this sensitive file arbitrarily in terms of security issues. So we need to figure out a solution to limit the permission of users.
+Maybe you&amp;rsquo;ll ask: how about defining the available part of the file for the users? For example, in a sensitive file, line 0 to 5 belongs to user A, line 6 to 10 belongs to user B, and so forth.</description>
+    </item>
+    
     <item>
       <title>Writeup: mistake</title>
       <link>https://chuang76.github.io/posts/mistake/</link>

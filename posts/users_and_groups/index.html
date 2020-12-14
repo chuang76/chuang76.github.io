@@ -15,10 +15,10 @@
     <title>
       
       
-         Writeup: mistake 
+         Users and Groups 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/posts/mistake/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/users_and_groups/">
 
     <style>
   * {
@@ -420,7 +420,7 @@
 
 
 <section id=content>
-  <h1> Writeup: mistake </h1>
+  <h1> Users and Groups </h1>
 
   
     <div id=sub-header>
@@ -429,54 +429,97 @@
   
 
   <div class="entry-content">
-    <p>This is a challenge from <a href="https://pwnable.kr/">pwnable.kr</a>. According to the hint, the solution is about <a href="https://en.cppreference.com/w/c/language/operator_precedence">operator priority</a>. Apart from that, we can observe that there are some mistakes in the source code.</p>
-<pre><code>if (fd = open(&quot;/home/mistake/password&quot;, O_RDONLY, 0400) &lt; 0) {
-	printf(&quot;can't open password %d\n&quot;, fd);
-	return 0;
-}
-</code></pre><p>The priority of the assignment operator (=) is less than the relation operator (&lt;). Since opening a file called password is successful, the return value is nonnegative. Hence, the value of fd is false (i.e., 0).</p>
-<p>Subsequently, the program reads the contents pointed by the file descriptor fd (0 means stdin), and stores the contents into a buffer called pw_buf1. Besides, another buffer called pw_buf2 is provided for the user to enter arbitrary values. The contents of pw_buf2 then are applied to XOR encryption. Finally, if the encrypted pw_buf2 is equal to pw_buf1, we can view contents of an executable flag.</p>
-<p>Now, since we can control both pw_buf1 and pw_buf2, it is easy to capture the flag. Let&rsquo;s write a simple program called p1.c to figure out what values should be entered.</p>
+    <h2 id="identifier">Identifier</h2>
+<p>Imagine a situation: there is a file contains sensitive information in the system. Obviously, regular users should not access this sensitive file arbitrarily in terms of security issues.  So we need to figure out a solution to limit the permission of users.</p>
+<p>Maybe you&rsquo;ll ask: how about defining the available part of the file for the users? For example, in a sensitive file, line 0 to 5 belongs to user A, line 6 to 10 belongs to user B, and so forth. However, though the approach which increases granularity can solve the problem, it will increase the complexity of the operating system significantly.</p>
+<p>Unix systems provide a mechanism called <a href="https://en.wikipedia.org/wiki/User_identifier">identifier</a> to manage the permission in a file level. Each user has a unique number called user identifier (UID). According to UID, we can determine which system resource can be accessed by the user. Besides, users can belong to one or more groups, so there is another identifier called group identifier (GID).</p>
+<!-- raw HTML omitted -->
+<h2 id="password-file">Password file</h2>
+<p>Historically, Unix systems maintain user-related information (namely login name, encrypted password, UID, GID, comment, home directory, and login shell) in a file called /etc/passwd. Each line in this file describes one user account. All fields are separated by a colon (:) symbol. Note that the second field (encrypted password) <code>x</code> means the actual content is stored in another file called /etc/shadow. We&rsquo;ll introduce it later.</p>
+<pre><code>$ cat /etc/passwd | head -n 1
+root:x:0:0:root:/root:/bin/bash
+</code></pre><p>We can observe that /etc/passwd is readable for all users as follows. Why? The answer is that it contains useful information for the users. For example, it allows the users to do the mapping between the login name and UID (you can also check the functionality of commands <code>ls</code> and <code>finger</code>). So it is necessary for the file to be world-readable.</p>
+<pre><code>$ ls -l /etc/passwd
+-rw-r--r-- 1 root root 3159 Sep 16 08:35 /etc/passwd
+</code></pre><p>Originally, the passwords were kept in the /etc/passwd file. However, its world-readable property may cause a security problem even the passwords have been encrypted in a hash function. Anyone who logged into the system is able to read the file. As the computer becomes more powerful, the attackers can crack the passwords using an offline <a href="https://en.wikipedia.org/wiki/Brute-force_attack">brute-force attack</a>. (You can download the file when read permission is available.) One method to address this problem is to separate the passwords from other data. That is, keep the sensitive information in another file, and this file is called /etc/shadow.</p>
+<!-- raw HTML omitted -->
+<h2 id="shadow-file">Shadow file</h2>
+<p>As we mentioned above, Unix systems move the sensitive information into /etc/shadow while non-sensitive information remains in the public readable file /etc/passwd. In other words, the purpose of the shadow file is to &ldquo;shadow&rdquo; the encrypted passwords. Only the root and members of shadow group can access this file.</p>
+<pre><code>$ ls -l /etc/shadow
+-rw-r----- 1 root shadow 1668 Sep 16 08:35 /etc/shadow
+</code></pre><!-- raw HTML omitted -->
+<h2 id="retrieve-user-information">Retrieve user information</h2>
+<p>The <em>passwd</em> structure is defined in &lt;pwd.h&gt;, and it includes at least the members as follows:</p>
+<pre><code>char    *pw_name   User's login name.
+uid_t    pw_uid    Numerical user ID.
+gid_t    pw_gid    Numerical group ID.
+char    *pw_dir    Initial working directory.
+char    *pw_shell  Program to use as shell.
+</code></pre><p>Unix systems provide some library functions to retrieve user information. Let&rsquo;s write a simple example to convert UID to login name and convert login name to its UID.</p>
 <pre><code>#include &lt;stdio.h&gt;
-#define PW_LEN 10
-#define XORKEY 1
+#include &lt;stdlib.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;pwd.h&gt;
 
-void xor(char* s, int len) {
-        for (int i = 0; i &lt; len; i++) 
-                s[i] ^= XORKEY;
+char* id2name(uid_t id)
+{
+    struct passwd* pwd = getpwuid(id);
+    if (pwd == NULL)
+    	return NULL;
+    else
+    	return pwd-&gt;pw_name;
+}
+
+uid_t name2id(char* name)
+{   
+    if (name == NULL || *name == '\0')
+    	return -1;
+    
+    struct passwd* pwd = getpwnam(name);       
+    if (pwd == NULL)
+    	return -1;
+    else
+    	return pwd-&gt;pw_uid;
 }
 
 int main(int argc, char** argv)
 {
-        char pw[PW_LEN + 1];
-        scanf(&quot;%10s&quot;, pw);
-        printf(&quot;pw = %s\n&quot;, pw);
-
-        xor(pw, 10);
-        printf(&quot;after xor, pw = %s\n&quot;, pw);
-
-        return 0;
+    uid_t id = 0;
+    printf(&quot;UID = %d, login name = %s\n&quot;, id, id2name(id));    
+    
+    char* name = &quot;root&quot;;
+    printf(&quot;Login name = %s, UID = %d\n&quot;, name, (int)name2id(name));   
+    
+    return 0;
 }
-</code></pre><p>If we enter 0123456789 as pw, its encrypted value is 1032547698. Hence, we should enter 1032547698 as pw_buf1, and 0123456789 as pw_buf2.</p>
-<pre><code>0123456789
-pw = 0123456789
-after xor, pw = 1032547698
-</code></pre><p>Here is the flag.</p>
-<pre><code>mistake@pwnable:~$ ./mistake
-do not bruteforce...
-1032547698
-input password : 0123456789
-Password OK
-Mommy, the operator priority always confuses me :(
-</code></pre>
+</code></pre><p>Here is the result.</p>
+<pre><code>$ ./p1
+UID = 0, login name = root
+Login name = root, UID = 0
+</code></pre><!-- raw HTML omitted -->
+<h2 id="thinking">Thinking</h2>
+<p>Some naive ideas when I study these topics.</p>
+<ol>
+<li>What is the purpose of shadow group? Who is in the shadow group? Maybe the reason that shadow group exists is a convention?</li>
+<li>To address the security problem, how about using stronger encrypted algorithms?</li>
+<li>Could using a shadow file to protect the passwords be regarded as a design with indirection?</li>
+</ol>
+<!-- raw HTML omitted -->
+<h2 id="reference">Reference</h2>
+<ol>
+<li>The Linux Programming Interface, Michael Kerrisk.</li>
+<li>Linux System Programming, Robert Love.</li>
+<li>Linux Shadow Password HOWTO, Michael H. Jackson.</li>
+<li>Understanding /etc/passwd File Format, Vivek Gite.</li>
+<li>Computer &amp; Internet Security: A Hands-on Approach, Wenliang Wu.</li>
+</ol>
+
   </div>
 
   <div id=links>
     
-      <a href="https://chuang76.github.io/posts/leg/">&laquo;&nbsp;Writeup: leg</a>
+      <a href="https://chuang76.github.io/posts/mistake/">&laquo;&nbsp;Writeup: mistake</a>
     
-    
-      <a href="https://chuang76.github.io/posts/users_and_groups/">Users and Groups&nbsp;&raquo;</a>
     
   </div>
 </section>
