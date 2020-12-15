@@ -6,7 +6,17 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 14 Dec 2020 13:49:34 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Dec 2020 23:00:54 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: shellshock</title>
+      <link>https://chuang76.github.io/posts/shellshock/</link>
+      <pubDate>Mon, 14 Dec 2020 23:00:54 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/shellshock/</guid>
+      <description>This is a challenge in pwnable.kr. The home directory contains the following files:
+shellshock@pwnable:~$ ls -al total 980 drwxr-x--- 5 root shellshock 4096 Oct 23 2016 . drwxr-xr-x 116 root root 4096 Apr 17 2020 .. -r-xr-xr-x 1 root shellshock 959120 Oct 12 2014 bash d--------- 2 root root 4096 Oct 12 2014 .bash_history -r--r----- 1 root shellshock_pwn 47 Oct 12 2014 flag dr-xr-xr-x 2 root root 4096 Oct 12 2014 .</description>
+    </item>
+    
     <item>
       <title>Users and Groups</title>
       <link>https://chuang76.github.io/posts/users_and_groups/</link>
@@ -89,11 +99,11 @@ Why dynamic linking? (1) share codes, if the library (e.g. libc) contains a lot 
       <guid>https://chuang76.github.io/posts/toefl/</guid>
       <description>Intro 本人英文不好，這篇紀錄一些備考資源和拙見，希望能鼓勵到準備托福的同學。三戰和四戰時間約隔兩周左右。
 三戰：R29 L19 S19 W21, Total 88 四戰：R29 L25 S22 W23, Total 99 背景：
- 平常很少碰英文 / 學測英文 14 級 / 沒背過指考 7000 單 / 舊制多益 700 多 英文聽力耳背界權威，把聽力考卷當閱讀測驗在寫  Tools 常用的工具、逛的論壇
+ 平常很少碰英文 / 學測英文 14 級 / 沒背過指考 7000 單 / 舊制多益 700 多 聽力爆爛，把聽力考卷當閱讀測驗在寫  Tools 常用的工具、逛的論壇
  考滿分：寫 TPO 的網站（破解區域限制：KMF unblock） 字典：Merriam Webster、Youglish、Collocation 論壇：r/ToeflAdvice、一畝三分地  Reading 以下分三個 part：
 （一）增強實力
  分類單字：刷一遍分類單字，e.g. 生物學、考古學、天文學等 長難句：可以翻一下 GRE 長難句，抓平行結構、對比、讓步等 閱讀素材：National Geogaphy、Scientific American 補充：Merriam Webster 有提供例句，查單字可以順道點進去看文章（我主要的閱讀來源，雜七雜八都看）  （二）答題技巧
-前提：整篇文章不一定要每句都看懂，抓到作者想傳達的訊息即可 怎麼抓重點：通常一段只會有一到兩個重點，題目本質上就是文章重點 幾乎每句話都看不懂：看回主題句，段落要表達的常是圍繞主題句闡述 干擾選項：無中生有 / 主角被偷換 投機取巧：段落要是都沒出題，我只會瞄首尾句就跳過，這個方法見仁見智 小結：第一段可以猜到整篇大概會講什麼（討論某物種、某天文現象、美國某地農業發展等）；主題句仔細讀，重點交給題目提示，末句會銜接下一段，猜到下一段內容；剩下用掃的，這樣應該速度會快很多，有比較多時間處理模稜兩可或邏輯有問題的題目。  （三）其他</description>
+前提：整篇文章不一定要每句都看懂，抓到作者想傳達的訊息即可 怎麼抓重點：通常一段只會有一到兩個重點，題目本質上就是文章重點 幾乎每句話都看不懂：看回主題句，段落要表達的常是圍繞主題句闡述 干擾選項：無中生有 / 主角被偷換 投機取巧：一整段要是都沒出題，我只會瞄首尾句就跳過，這個方法見仁見智 小結：第一段可以猜到整篇大概會講什麼（討論某物種、某天文現象、美國某地農業發展等）；主題句仔細讀，重點交給題目提示，末句會銜接下一段，猜到下一段內容；剩下用掃的，這樣應該速度會快很多，有比較多時間處理模稜兩可或邏輯有問題的題目。  （三）其他</description>
     </item>
     
   </channel>
