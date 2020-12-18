@@ -15,10 +15,10 @@
     <title>
       
       
-         Writeup: Nebula (level 3) 
+         Writeup: Nebula (level 4) 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p2/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p3/">
 
     <style>
   * {
@@ -420,7 +420,7 @@
 
 
 <section id=content>
-  <h1> Writeup: Nebula (level 3) </h1>
+  <h1> Writeup: Nebula (level 4) </h1>
 
   
     <div id=sub-header>
@@ -431,60 +431,63 @@
   <div class="entry-content">
     <p>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at <a href="https://exploit-exercises.lains.space/">Exploit Exercises</a>.</p>
 <!-- raw HTML omitted -->
-<h2 id="level-3">Level 3</h2>
-<p>The description of Level 3 is provided as follows.</p>
-<pre><code>Check the home directory of flag03 and take note of the files there.
+<h2 id="level-4">Level 4</h2>
+<p>The description of Level 4 is provided as follows.</p>
+<pre><code>This level requires you to read the token file, but the code restricts the files 
+that can be read. Find a way to bypass it :)
 
-There is a crontab that is called every couple of minutes.
-
-To do this level, log in as the level03 account with the password level03. 
-Files for this level can be found in /home/flag03.
-</code></pre><p>As you can see, there are one shell script and one directory in /home/flag03.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/03-1.PNG?raw=true" alt=""></p>
-<p>Let&rsquo;s check the contents of writable.sh. It runs each file in the directory writable.d.</p>
-<pre><code>#!/bin/sh
-for i in /home/flag03/writable.d/* ; do
-	(ulimit -t 5; bash -x &quot;$i&quot;)
-	rm -f &quot;$i&quot;
-done
-</code></pre><p>According to the hint, there is a crontab in the system. <a href="https://en.wikipedia.org/wiki/Cron">Cron</a> (cron job) is a time-based job scheduler in Unix-based systems. It provides the user to run the jobs (commands or shell scripts) at fixed times. Its configure table, crontab (cron table), is used to specify the shell command to run periodically on a given schedule. We can check the contents of crontab in /etc directory.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/03-6.PNG?raw=true" alt=""></p>
-<p>Let&rsquo;s check the cron mechanism with a simple experiment. Create a shell script in the writable.d while the shell script is going to create a file named &ldquo;test&rdquo; in /home/flag03. As you can see, after two minutes, a file named &ldquo;test&rdquo; was created in /home/flag03 indeed.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/03-2.PNG?raw=true" alt=""></p>
-<p>So, to get the flag, we can create a shell script again, which executes our exploit program, in the writable.d. Since /tmp directory is world-writable. We can write our exploit program and compile it in /tmp. It is the same as the exploit program in <a href="https://chuang76.github.io/posts/nebula_p1/">Level 1</a>.</p>
+To do this level, log in as the level04 account with the password level04. 
+Files for this level can be found in /home/flag04.
+</code></pre><p>The source code is available.</p>
 <pre><code>#include &lt;stdlib.h&gt;
 #include &lt;unistd.h&gt;
 #include &lt;string.h&gt;
 #include &lt;sys/types.h&gt;
 #include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
 
-int main(int argc, char** argv)
+int main(int argc, char **argv, char **envp)
 {
-    gid_t gid = getegid();
-    uid_t uid = geteuid();
+      char buf[1024];
+      int fd, rc;
 
-    setresgid(gid, gid, gid);
-    setresuid(uid, uid, uid);
+      if(argc == 1) {
+          printf(&quot;%s [file to read]\n&quot;, argv[0]);
+          exit(EXIT_FAILURE);
+      }
 
-    system(&quot;/bin/bash&quot;);
+      if(strstr(argv[1], &quot;token&quot;) != NULL) {
+          printf(&quot;You may not access '%s'\n&quot;, argv[1]);
+          exit(EXIT_FAILURE);
+      }
+
+      fd = open(argv[1], O_RDONLY);
+      if(fd == -1) {
+          err(EXIT_FAILURE, &quot;Unable to open %s&quot;, argv[1]);
+      }
+
+      rc = read(fd, buf, sizeof(buf));
+
+      if(rc == -1) {
+          err(EXIT_FAILURE, &quot;Unable to read fd %d&quot;, fd);
+      }
+
+      write(1, buf, rc);
 }
-</code></pre><p><img src="https://github.com/chuang76/image/blob/master/03-3.PNG?raw=true" alt=""></p>
-<p>Also, the shell script named run.sh contains the following commands.</p>
-<pre><code>cp /tmp/vul /home/flag03/vul 
-chmod u+s /home/flag03/vul
-</code></pre><p>After a couple of minutes, cron runs the jobs (include shell scripts) in the system. Therefore, an executable named <code>vul</code> exists in /home/flag03. Besides, due to chmod command previously executed, we have the permission to run vul.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/03-4.PNG?raw=true" alt=""></p>
-<p>Now, let&rsquo;s run this exploit executable to control the bash of the account flag03.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/03-5.PNG?raw=true" alt=""></p>
+</code></pre><p>According to the source code, if we use &ldquo;token&rdquo; as the argument of flag04, we&rsquo;ll get the error message: You may not access token. However, we can perform an indirect way to view the contents of a restricted file. That is, create a symbolic link of the file token.</p>
+<pre><code>$ ln -s [target] [target_symbolic]
+</code></pre><p><img src="https://github.com/chuang76/image/blob/master/04-1.PNG?raw=true" alt=""></p>
+<p>After we have made the symbolic link, we can execute target_symbolic file, just as we could with the target file. Now, we can read the contents of token as follows.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/04-2.PNG?raw=true" alt=""></p>
+<p>Use the token as the password of account flag04, then we can get the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/04-3.PNG?raw=true" alt=""></p>
 
   </div>
 
   <div id=links>
     
-      <a href="https://chuang76.github.io/posts/nebula_p1/">&laquo;&nbsp;Writeup: Nebula (level 0 - level 2)</a>
+      <a href="https://chuang76.github.io/posts/nebula_p2/">&laquo;&nbsp;Writeup: Nebula (level 3)</a>
     
-    
-      <a href="https://chuang76.github.io/posts/nebula_p3/">Writeup: Nebula (level 4)&nbsp;&raquo;</a>
     
   </div>
 </section>
