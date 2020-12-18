@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.79.0" />
     <meta charset="utf-8">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,10 +15,10 @@
     <title>
       
       
-         Before Dawn 
+         Writeup: Nebula (level 5) 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p4/">
 
     <style>
   * {
@@ -409,7 +408,6 @@
 </style>
 
 
-    <link rel="alternate" type="application/rss+xml" href="https://chuang76.github.io/index.xml" title="Before Dawn" />
     </head>
 
   <body>
@@ -422,121 +420,52 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Writeup: Nebula (level 5) </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at <a href="https://exploit-exercises.lains.space/">Exploit Exercises</a>.</p>
+<!-- raw HTML omitted -->
+<h2 id="level-5">Level 5</h2>
+<p>The description of Level 5 is provided as follows.</p>
+<pre><code>Check the flag05 home directory. You are looking for weak directory permissions
+
+To do this level, log in as the level05 account with the password level05. 
+Files for this level can be found in /home/flag05.
+</code></pre><p>We first check the contents in the directory /home/flag05.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-1.PNG?raw=true" alt=""></p>
+<p>There is a compressed file in the directory .backup. Let&rsquo;s try to uncompress it. However, the error message indicates that we don&rsquo;t have the permission.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-2.PNG?raw=true" alt=""></p>
+<p>To get rid of the permission issue, let&rsquo;s copy this file into /tmp directory.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-3.PNG?raw=true" alt=""></p>
+<p>Now, we are able to uncompress the compressed file with tar command.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-4.PNG?raw=true" alt=""></p>
+<p>After uncompressing the file, we obtain the public key, which helps us to log into a remotely as account flag05. <a href="https://en.wikipedia.org/wiki/SSH_(Secure_Shell)">SSH</a> (Secure shell) is a cryptographic network protocol. It provides users to control the remote servers over the Internet, such as login, remote command-line, to name a few.</p>
+<p>Since SSH uses <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> to authenticate and now we have the public key, we are allowed to log in remotely as the account flag05 without any passwords. Let&rsquo;s try it via ssh command.</p>
+<pre><code>$ ssh flag05@localhost
+</code></pre><p>As you can see, we log in as the account flag05.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-5.PNG?raw=true" alt=""></p>
+<p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-6.PNG?raw=true" alt=""></p>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p4/">Writeup: Nebula (level 5)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
+      <a href="https://chuang76.github.io/posts/nebula_p3/">&laquo;&nbsp;Writeup: Nebula (level 4)</a>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p3/">Writeup: Nebula (level 4)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p2/">Writeup: Nebula (level 3)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p1/">Writeup: Nebula (level 0 - level 2)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/shellshock/">Writeup: shellshock</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/users_and_groups/">Users and Groups</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/mistake/">Writeup: mistake</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/leg/">Writeup: leg</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/input/">Writeup: input</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/passcode/">Writeup: passcode</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/payload/">Walkthrough: payload</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/lazy_binding/">Lazy binding</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 
