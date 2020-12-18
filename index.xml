@@ -6,7 +6,18 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 16 Dec 2020 14:42:58 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Dec 2020 12:06:53 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: Nebula (level 3)</title>
+      <link>https://chuang76.github.io/posts/nebula_p2/</link>
+      <pubDate>Fri, 18 Dec 2020 12:06:53 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/nebula_p2/</guid>
+      <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
+Level 3 The description of Level 3 is provided as follows.
+Check the home directory of flag03 and take note of the files there. There is a crontab that is called every couple of minutes. To do this level, log in as the level03 account with the password level03.</description>
+    </item>
+    
     <item>
       <title>Writeup: Nebula (level 0 - level 2)</title>
       <link>https://chuang76.github.io/posts/nebula_p1/</link>
