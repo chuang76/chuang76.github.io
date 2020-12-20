@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.79.0" />
     <meta charset="utf-8">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,10 +15,10 @@
     <title>
       
       
-         Before Dawn 
+         Writeup: Nebula (level 6) 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p5/">
 
     <style>
   * {
@@ -409,7 +408,6 @@
 </style>
 
 
-    <link rel="alternate" type="application/rss+xml" href="https://chuang76.github.io/index.xml" title="Before Dawn" />
     </head>
 
   <body>
@@ -422,130 +420,53 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Writeup: Nebula (level 6) </h1>
+
+  
+    <div id=sub-header>
+      December 2020 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at <a href="https://exploit-exercises.lains.space/">Exploit Exercises</a>.</p>
+<!-- raw HTML omitted -->
+<h2 id="level-6">Level 6</h2>
+<p>The description of Level 6 is provided as follows.</p>
+<pre><code>The flag06 account credentials came from a legacy unix system.
+
+To do this level, log in as the level06 account with the password level06. 
+Files for this level can be found in /home/flag06.
+</code></pre><p>If you are not familiar with the password file (/etc/passwd) and shadow file (/etc/shadow) in the Unix-based system, you can check this <a href="https://chuang76.github.io/posts/users_and_groups/">post</a> I wrote before. In this challenge, we are going to use the password file to get the flag.</p>
+<p>Let&rsquo;s check the contents of /etc/passwd first. The second field is about password information, i.e., encrypted password. In the modern system, the second field is typically stored as <code>x</code>, which means the actual content is maintained in another file called /etc/shadow.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/06-1.PNG?raw=true" alt=""></p>
+<p>However, this is a legacy Unix system, the password is not &ldquo;hidden&rdquo; in the shadow file. So we can use <a href="https://zh.wikipedia.org/wiki/John_The_Ripper">John The Ripper</a>, a free crafting passwords tool to decode the password.</p>
+<pre><code>$ cat passwd
+flag06:ueqwOCnSGdsuM:993:993::/home/flag06:/bin/sh
+
+$ john passwd
+Loaded 1 password hash (descrypt, traditional crypt(3) [DES 128/128 SSE2-16])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+hello            (flag06)
+1g 0:00:00:00 100% 2/3 20.00g/s 15060p/s 15060c/s 15060C/s 123456..marley
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed
+</code></pre><p>Now, we have the decoded password, i.e., &ldquo;hello&rdquo;. Let&rsquo;s use it to log in as account flag06 and get the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/06-2.PNG?raw=true" alt=""></p>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p5/">Writeup: Nebula (level 6)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
+      <a href="https://chuang76.github.io/posts/nebula_p4/">&laquo;&nbsp;Writeup: Nebula (level 5)</a>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p4/">Writeup: Nebula (level 5)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p3/">Writeup: Nebula (level 4)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p2/">Writeup: Nebula (level 3)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p1/">Writeup: Nebula (level 0 - level 2)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/shellshock/">Writeup: shellshock</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/users_and_groups/">Users and Groups</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/mistake/">Writeup: mistake</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/leg/">Writeup: leg</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/input/">Writeup: input</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/passcode/">Writeup: passcode</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/payload/">Walkthrough: payload</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/lazy_binding/">Lazy binding</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 
