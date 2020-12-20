@@ -6,7 +6,18 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 19 Dec 2020 16:05:18 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Dec 2020 16:09:16 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: Nebula (level 7)</title>
+      <link>https://chuang76.github.io/posts/nebula_p6/</link>
+      <pubDate>Sat, 19 Dec 2020 16:09:16 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/nebula_p6/</guid>
+      <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
+Level 7 Here is the description of Level 7.
+The flag07 user was writing their very first perl program that allowed them to ping hosts to see if they were reachable from the web server. To do this level, log in as the level07 account with the password level07.</description>
+    </item>
+    
     <item>
       <title>Writeup: Nebula (level 6)</title>
       <link>https://chuang76.github.io/posts/nebula_p5/</link>
