@@ -15,7 +15,7 @@
     <title>
       
       
-         Writeup: Nebula (level 3) 
+         Writeup: Nebula (level 3 - level 5) 
       
     </title>
     <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p2/">
@@ -420,7 +420,7 @@
 
 
 <section id=content>
-  <h1> Writeup: Nebula (level 3) </h1>
+  <h1> Writeup: Nebula (level 3 - level 5) </h1>
 
   
     <div id=sub-header>
@@ -476,6 +476,79 @@ chmod u+s /home/flag03/vul
 <p><img src="https://github.com/chuang76/image/blob/master/03-4.PNG?raw=true" alt=""></p>
 <p>Now, let&rsquo;s run this exploit executable to control the bash of the account flag03.</p>
 <p><img src="https://github.com/chuang76/image/blob/master/03-5.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="level-4">Level 4</h2>
+<p>The description of Level 4 is provided as follows.</p>
+<pre><code>This level requires you to read the token file, but the code restricts the files 
+that can be read. Find a way to bypass it :)
+
+To do this level, log in as the level04 account with the password level04. 
+Files for this level can be found in /home/flag04.
+</code></pre><p>The source code is available.</p>
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+
+int main(int argc, char **argv, char **envp)
+{
+      char buf[1024];
+      int fd, rc;
+
+      if(argc == 1) {
+          printf(&quot;%s [file to read]\n&quot;, argv[0]);
+          exit(EXIT_FAILURE);
+      }
+
+      if(strstr(argv[1], &quot;token&quot;) != NULL) {
+          printf(&quot;You may not access '%s'\n&quot;, argv[1]);
+          exit(EXIT_FAILURE);
+      }
+
+      fd = open(argv[1], O_RDONLY);
+      if(fd == -1) {
+          err(EXIT_FAILURE, &quot;Unable to open %s&quot;, argv[1]);
+      }
+
+      rc = read(fd, buf, sizeof(buf));
+
+      if(rc == -1) {
+          err(EXIT_FAILURE, &quot;Unable to read fd %d&quot;, fd);
+      }
+
+      write(1, buf, rc);
+}
+</code></pre><p>According to the source code, if we use &ldquo;token&rdquo; as the argument of flag04, we&rsquo;ll get the error message: You may not access token. However, we can perform an indirect way to view the contents of a restricted file. That is, create a symbolic link of the file token.</p>
+<pre><code>$ ln -s [target] [target_symbolic]
+</code></pre><p><img src="https://github.com/chuang76/image/blob/master/04-1.PNG?raw=true" alt=""></p>
+<p>After we have made the symbolic link, we can execute target_symbolic file, just as we could with the target file. Now, we can read the contents of token as follows.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/04-2.PNG?raw=true" alt=""></p>
+<p>Use the token as the password of account flag04, then we can get the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/04-3.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="level-5">Level 5</h2>
+<p>The description of Level 5 is provided as follows.</p>
+<pre><code>Check the flag05 home directory. You are looking for weak directory permissions
+
+To do this level, log in as the level05 account with the password level05. 
+Files for this level can be found in /home/flag05.
+</code></pre><p>We first check the contents in the directory /home/flag05.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-1.PNG?raw=true" alt=""></p>
+<p>There is a compressed file in the directory .backup. Let&rsquo;s try to uncompress it. However, the error message indicates that we don&rsquo;t have the permission.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-2.PNG?raw=true" alt=""></p>
+<p>To get rid of the permission issue, let&rsquo;s copy this file into /tmp directory.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-3.PNG?raw=true" alt=""></p>
+<p>Now, we are able to uncompress the compressed file with tar command.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-4.PNG?raw=true" alt=""></p>
+<p>After uncompressing the file, we obtain the public key, which helps us to log into a remotely as account flag05. <a href="https://en.wikipedia.org/wiki/SSH_(Secure_Shell)">SSH</a> (Secure shell) is a cryptographic network protocol. It provides users to control the remote servers over the Internet, such as login, remote command-line, to name a few.</p>
+<p>Since SSH uses <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> to authenticate and now we have the public key, we are allowed to log in remotely as the account flag05 without any passwords. Let&rsquo;s try it via ssh command.</p>
+<pre><code>$ ssh flag05@localhost
+</code></pre><p>As you can see, we log in as the account flag05.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-5.PNG?raw=true" alt=""></p>
+<p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/05-6.PNG?raw=true" alt=""></p>
 
   </div>
 
@@ -484,7 +557,7 @@ chmod u+s /home/flag03/vul
       <a href="https://chuang76.github.io/posts/nebula_p1/">&laquo;&nbsp;Writeup: Nebula (level 0 - level 2)</a>
     
     
-      <a href="https://chuang76.github.io/posts/nebula_p3/">Writeup: Nebula (level 4)&nbsp;&raquo;</a>
+      <a href="https://chuang76.github.io/posts/nebula_p3/">Writeup: Nebula (level 6 - level 8)&nbsp;&raquo;</a>
     
   </div>
 </section>

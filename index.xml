@@ -6,53 +6,20 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 19 Dec 2020 16:09:16 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Dec 2020 16:05:18 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Writeup: Nebula (level 7)</title>
-      <link>https://chuang76.github.io/posts/nebula_p6/</link>
-      <pubDate>Sat, 19 Dec 2020 16:09:16 +0800</pubDate>
-      
-      <guid>https://chuang76.github.io/posts/nebula_p6/</guid>
-      <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
-Level 7 Here is the description of Level 7.
-The flag07 user was writing their very first perl program that allowed them to ping hosts to see if they were reachable from the web server. To do this level, log in as the level07 account with the password level07.</description>
-    </item>
-    
-    <item>
-      <title>Writeup: Nebula (level 6)</title>
-      <link>https://chuang76.github.io/posts/nebula_p5/</link>
+      <title>Writeup: Nebula (level 6 - level 8)</title>
+      <link>https://chuang76.github.io/posts/nebula_p3/</link>
       <pubDate>Sat, 19 Dec 2020 16:05:18 +0800</pubDate>
       
-      <guid>https://chuang76.github.io/posts/nebula_p5/</guid>
+      <guid>https://chuang76.github.io/posts/nebula_p3/</guid>
       <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
 Level 6 The description of Level 6 is provided as follows.
 The flag06 account credentials came from a legacy unix system. To do this level, log in as the level06 account with the password level06. Files for this level can be found in /home/flag06.</description>
     </item>
     
     <item>
-      <title>Writeup: Nebula (level 5)</title>
-      <link>https://chuang76.github.io/posts/nebula_p4/</link>
-      <pubDate>Fri, 18 Dec 2020 15:34:59 +0800</pubDate>
-      
-      <guid>https://chuang76.github.io/posts/nebula_p4/</guid>
-      <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
-Level 5 The description of Level 5 is provided as follows.
-Check the flag05 home directory. You are looking for weak directory permissions To do this level, log in as the level05 account with the password level05. Files for this level can be found in /home/flag05.</description>
-    </item>
-    
-    <item>
-      <title>Writeup: Nebula (level 4)</title>
-      <link>https://chuang76.github.io/posts/nebula_p3/</link>
-      <pubDate>Fri, 18 Dec 2020 13:58:05 +0800</pubDate>
-      
-      <guid>https://chuang76.github.io/posts/nebula_p3/</guid>
-      <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
-Level 4 The description of Level 4 is provided as follows.
-This level requires you to read the token file, but the code restricts the files that can be read. Find a way to bypass it :) To do this level, log in as the level04 account with the password level04.</description>
-    </item>
-    
-    <item>
-      <title>Writeup: Nebula (level 3)</title>
+      <title>Writeup: Nebula (level 3 - level 5)</title>
       <link>https://chuang76.github.io/posts/nebula_p2/</link>
       <pubDate>Fri, 18 Dec 2020 12:06:53 +0800</pubDate>
       

