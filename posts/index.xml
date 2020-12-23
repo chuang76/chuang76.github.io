@@ -6,7 +6,18 @@
     <description>Recent content in Posts on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 19 Dec 2020 16:05:18 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Dec 2020 14:36:26 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writeup: Nebula (level 10)</title>
+      <link>https://chuang76.github.io/posts/nebula_p4/</link>
+      <pubDate>Tue, 22 Dec 2020 14:36:26 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/nebula_p4/</guid>
+      <description>Nebula is a virtual machine that covers a variety of challenges about Linux privilege escalation, scripting language issues, and file system race conditions. It is available at Exploit Exercises.
+Level 10 The description of Level 10 is provided as follows.
+The setuid binary at /home/flag10/flag10 binary will upload any file given, as long as it meets the requirements of the access() system call. To do this level, log in as the level10 account with the password level10.</description>
+    </item>
+    
     <item>
       <title>Writeup: Nebula (level 6 - level 8)</title>
       <link>https://chuang76.github.io/posts/nebula_p3/</link>
