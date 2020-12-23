@@ -452,7 +452,7 @@ Files for this level can be found in /home/flag10.
 <h2 id="solution-2">Solution 2</h2>
 <p>Let&rsquo;s go back to the directory /home/flag10. Here is its contents.</p>
 <p><img src="https://github.com/chuang76/image/blob/master/10-1.PNG?raw=true" alt=""></p>
-<p>The source code of the executable flag10 is available. The program is going to check the file permission, connect to the port 18211, then read something from the port, and write the data to the buffer.</p>
+<p>The source code of the executable flag10 is available. The program is going to check the file permission, create a socket, connect to the port 18211, then read something from the file, and write (send) the data to the socket.</p>
 <pre><code>#include &lt;stdlib.h&gt;
 #include &lt;unistd.h&gt;
 #include &lt;sys/types.h&gt;
@@ -532,7 +532,7 @@ int main(int argc, char **argv)
 <p>However, it&rsquo;s failed. The error message indicates that I don&rsquo;t have access to the file. The reason is: the argument R_OK in the function access() checks <em>real user ID</em>, not effective user ID like open() function checks. Therefore, we can not pass the verification access() simply with the symbolic link.</p>
 <!-- raw HTML omitted -->
 <h2 id="the-second-attempt">The second attempt</h2>
-<p>Let&rsquo;s view the source code again. The program is a classical <a href="https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use">time-of-check to time-of-use</a> (TOCTOU), which is a software bug caused by the race condition. Though we don&rsquo;t have the ability to change the internal memory of the program, we can exploit the race condition to trick the Set-UID. That is, after passing the verification, and before opening the file, we make the file points to our target file /home/flag10/token. Since modern processors run billions of instructions per second, the duration (TOCTOW window) is very short, we need to try it repeatedly. To win the race condition, we can design the workflow as follows.</p>
+<p>Let&rsquo;s view the source code again. The program is a classical <a href="https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use">time-of-check to time-of-use</a> (TOCTOU), which is a software bug caused by the race condition. Though we don&rsquo;t have the ability to change the internal memory of the program, we can exploit the race condition to trick the Set-UID. That is, after passing the verification, and before opening the file, we make the file points to our target file /home/flag10/token. Since modern processors run billions of instructions per second, the duration (TOCTOU window) is very short, we need to try it repeatedly. To win the race condition, we can design the workflow as follows.</p>
 <pre><code>1. TTY1: used to keep listening to the port 18211
 2. TTY2: keep running the executable /home/flag10/flag10
 3. TTY3: keep creating a symbolic link to a writable file (pass the verfication)
