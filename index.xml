@@ -6,19 +6,7 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 30 Dec 2020 21:12:45 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Writeup: protostar (stack 0 - stack 4)</title>
-      <link>https://chuang76.github.io/posts/protostar_p1/</link>
-      <pubDate>Wed, 30 Dec 2020 21:12:45 +0800</pubDate>
-      
-      <guid>https://chuang76.github.io/posts/protostar_p1/</guid>
-      <description>Protostar is a virtual machine which introduces the following in a friendly way: network programming, byte order, handling sockets, stack overflows, format strings, and heap overflows. It is available at VulnHub.
-Stack 0 Here is some information of the executable /opt/protostar/bin/stack0.
-The source code is provided as follows.
-#include &amp;lt;stdlib.h&amp;gt; #include &amp;lt;unistd.h&amp;gt; #include &amp;lt;stdio.h&amp;gt; int main(int argc, char **argv) { volatile int modified; char buffer[64]; modified = 0; gets(buffer); if(modified !</description>
-    </item>
-    
+    <lastBuildDate>Tue, 22 Dec 2020 14:36:26 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Writeup: nebula (level 10)</title>
       <link>https://chuang76.github.io/posts/nebula_p4/</link>
