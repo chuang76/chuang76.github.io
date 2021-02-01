@@ -6,7 +6,19 @@
     <description>Recent content in Posts on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 22 Dec 2020 14:36:26 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 31 Jan 2021 14:47:41 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Buffer overflow attack</title>
+      <link>https://chuang76.github.io/posts/bof/</link>
+      <pubDate>Sun, 31 Jan 2021 14:47:41 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/bof/</guid>
+      <description>The goal of the following experiments is to exploit buffer overflow attack and get the root privilege of the shell.
+Setup Environment:
+ Google cloud virtual machine: Ubuntu 20.04 Linux kernel version: 5.4.0  Countermeasures:
+ ASLR (address space layout randomization) provided by the operating system NX/DEP bit provided by the hardware architecture StackGuard or canary mechanism provided by the compiler  Check if ASLR is activated or not (default is 2):</description>
+    </item>
+    
     <item>
       <title>Writeup: nebula (level 10)</title>
       <link>https://chuang76.github.io/posts/nebula_p4/</link>

