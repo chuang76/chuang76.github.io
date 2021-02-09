@@ -15,7 +15,7 @@
     <title>
       
       
-         Lazy binding 
+         Lazy Binding 
       
     </title>
     <link rel="canonical" href="https://chuang76.github.io/posts/lazy_binding/">
@@ -420,7 +420,7 @@
 
 
 <section id=content>
-  <h1> Lazy binding </h1>
+  <h1> Lazy Binding </h1>
 
   
     <div id=sub-header>
@@ -450,16 +450,16 @@
 </ol>
 <h2 id="experiment">Experiment</h2>
 <p>The experiment is on an x86 Linux platform. Let&rsquo;s start with a simple example called p1.c.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="">#include</span> <span style="">&lt;stdio.h&gt;</span><span style="">
-</span><span style=""></span>
-<span style="">int</span> main(<span style="">int</span> argc, <span style="">char</span>** argv)
+<pre><code>#include &lt;stdio.h&gt;
+
+int main(int argc, char** argv)
 {
-    puts(<span style="font-style:italic">&#34;Hello world&#34;</span>); 
-    puts(<span style="font-style:italic">&#34;Hello world again&#34;</span>); 
+    puts(&quot;Hello world&quot;); 
+    puts(&quot;Hello world again&quot;); 
     
-    <span style="font-weight:bold">return</span> 0; 
+    return 0; 
 }
-</code></pre></div><p>Compile it into an executable file with debugging information.</p>
+</code></pre><p>Compile it into an executable file with debugging information.</p>
 <pre><code>$ gcc p1.c -no-pie -g -o p1
 </code></pre><p>To understand how GOT and PLT work, we&rsquo;ll trace the program with gdb tool. First, disassemble the main function, and set a breakpoint at puts function (i.e., the address 0x401138).</p>
 <pre><code>gdb-peda$ disas main
@@ -510,7 +510,7 @@ Start              End                Perm      Name
 0x00007ffff7ffd000 0x00007ffff7ffe000 rw-p      /usr/lib/x86_64-linux-gnu/ld-2.31.so
 0x00007ffff7ffe000 0x00007ffff7fff000 rw-p      mapped
 0x00007ffffffde000 0x00007ffffffff000 rw-p      [stack]
-</code></pre><p>Actually, its name is <code>_dl_runtime_resolve_xsave</code>.  <code>_dl_runtime_resolve_xsave</code> is a function served for resolving reference. Basically, this function will use the parameters which we mentioned above to look up the symbol name &ldquo;puts\0&rdquo;, use this string to find the actual address of puts function in the libraries (libc), then update the address in the GOT (.got.plt) entry.</p>
+</code></pre><p>Actually, it is _dl_runtime_resolve_xsave(), which is a function served for resolving reference. Basically, this function will use the parameters which we mentioned above to look up the symbol name &ldquo;puts\0&rdquo;, use this string to find the actual address of puts function in the libraries (libc), then update the address in the GOT (.got.plt) entry.</p>
 <pre><code>gdb-peda$ x/3i $pc
 =&gt; 0x7ffff7fe8510 &lt;_dl_runtime_resolve_xsave&gt;:          push   rbx
    0x7ffff7fe8511 &lt;_dl_runtime_resolve_xsave+1&gt;:        mov    rbx,rsp
@@ -545,7 +545,7 @@ Name  : /usr/lib/x86_64-linux-gnu/libc-2.31.so
 
   <div id=links>
     
-      <a href="https://chuang76.github.io/posts/toefl/">&laquo;&nbsp;Toefl preparation</a>
+      <a href="https://chuang76.github.io/posts/toefl/">&laquo;&nbsp;Toefl Preparation</a>
     
     
       <a href="https://chuang76.github.io/posts/payload/">Walkthrough: payload&nbsp;&raquo;</a>
