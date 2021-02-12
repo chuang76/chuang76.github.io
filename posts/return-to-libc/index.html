@@ -503,7 +503,8 @@ $ gcc -m32 prtenv.c -g -o prtenv_dbg
 <p><img src="https://github.com/chuang76/image/blob/master/ch3-16.PNG?raw=true" alt=""></p>
 <p><img src="https://github.com/chuang76/image/blob/master/ch3-17.PNG?raw=true" alt=""></p>
 <h2 id="payload">Payload</h2>
-<p>Run the vulnerable program to find out where should we put the address of system(). That is, the value of ebp - the address of buffer + the size of ebp register =  0xffffd4d8 - 0xffffd4c0 + 4 = 28.</p>
+<p>Run the vulnerable program to find out where should we put the address of system(). That is, the value of ebp - the address of buffer + the size of ebp register =  0xffffd4d8 - 0xffffd4c0 + 4 = 28. So our crafted stack frame should looks like this:</p>
+<p><img src="https://github.com/chuang76/image/blob/master/ch3-19.PNG?raw=true" alt=""></p>
 <p>Here is our payload: replace the return address of strcmp()&rsquo;s frame as the address of system() and put the argument of system(), i.e., the address of the string &ldquo;/bin/sh&rdquo;. Note that it is necessary to fill the return address of system()&rsquo;s frame with the address of exit(), or the program will crash.</p>
 <pre><code>#!/usr/bin/python3
 
