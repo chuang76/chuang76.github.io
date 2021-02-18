@@ -13,7 +13,7 @@
       <pubDate>Sun, 14 Feb 2021 17:54:39 +0800</pubDate>
       
       <guid>https://chuang76.github.io/posts/stm32_1/</guid>
-      <description>最近買了一塊 STM32 L476RG 來玩，紀錄一下學習過程，基本上是根據交大 MCSL 這堂課的內容下去修改，然後做實驗。
+      <description>最近買了一塊 STM32 L476RG 來玩，紀錄一下學習過程，基本上是根據交大 MCSL 這堂課的內容做點實驗。目的在於熟悉 ARM 指令，以及了解 bare metal 等相關知識。
 實驗環境
  STM32 Nucleo-L476RG MCU Windows OS 10 USB Type-A to Mini-B cable IDE: System Workbench for STM32 (SW4STM32)  Lab 1-1 打開 IDE 後，Create 出一個 Ac6 STM32 MCU Project，選擇 L476RG board，預設會把 Debug 打開，選擇 No firmware 就可以了。以下為 main.s 的 code：
 	.syntax unified .cpu cortex-m4 .thumb .text .global main .equ AA, 0x55 main: movs r0, #AA movs r1, #20 adds r2, r0, r1 // r2 = r0 + r1 b main Q1：程式執行結束後 R2 值為多少？如何觀察？Build All 後，Run as debug，設單步執行，並且打開 Registers Window 觀察，可以發現 r2 變成 105。自己驗證 0x55 (AA) + 20 = 85 + 20 = 105，結果正確。</description>

