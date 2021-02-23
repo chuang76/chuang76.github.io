@@ -477,9 +477,9 @@ int main(int argc, char** argv)
 $ sudo chown root retlib
 $ sudo chmod 4755 retlib
 </code></pre><h2 id="idea">Idea</h2>
-<p>The idea of the return-to-libc attack is to jump into a function in the library (for example, libc) without running the instruction located in the stack. To get the root privilege of the shell, our goal is to invoke system(&quot;/bin/sh&quot;). So the first thing is to find out where is the function system(). We can use gdb debugger to print out the address of the system() as follows.</p>
+<p>The idea of the return-to-libc attack is to jump into a function in the library (for example, libc) without running the instruction located in the stack. To get the root privilege of the shell, our goal is to invoke system(&quot;/bin/sh&quot;) in the libc. So the first thing is to specify where is the function system(). We can use gdb debugger to print out the address of the system() as follows.</p>
 <p><img src="https://github.com/chuang76/image/blob/master/ch3-13.PNG?raw=true" alt=""></p>
-<p>Next, we need to figure out where is the string &ldquo;/bin/sh&rdquo;. One method is to use an environment variable. The reason is that when we execute a program from a shell prompt, the shell actually fork itself and creates a child process to run the program. All the exported environment variables will be <em>inherited</em> by the child process. So we can export a self-defined environment variable called &ldquo;my_shell&rdquo; which value equals to &ldquo;/bin/sh&rdquo; and use a simple program called &ldquo;prtenv.c&rdquo; to print out the address.</p>
+<p>Next, we need to find out where is the string &ldquo;/bin/sh&rdquo;. One method is to use an environment variable. The reason is that when we execute a program from a shell prompt, the shell actually fork itself and creates a child process to run the program. All the exported environment variables will be <em>inherited</em> by the child process. So we can export a self-defined environment variable called &ldquo;my_shell&rdquo; which value equals to &ldquo;/bin/sh&rdquo;, and use a simple program called &ldquo;prtenv.c&rdquo; to print out the address.</p>
 <pre><code>#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
 
@@ -536,7 +536,7 @@ with open(&quot;badfile&quot;, &quot;wb&quot;) as f:
       <a href="https://chuang76.github.io/posts/bof/">&laquo;&nbsp;Stack Buffer Overflow</a>
     
     
-      <a href="https://chuang76.github.io/posts/stm32_1/">STM32 Nucleo64: Lab #1&nbsp;&raquo;</a>
+      <a href="https://chuang76.github.io/posts/rop/">Return-Oriented Programming&nbsp;&raquo;</a>
     
   </div>
 </section>

